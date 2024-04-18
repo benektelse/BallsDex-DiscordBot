@@ -51,7 +51,7 @@ class DonationRequest(View):
     async def interaction_check(self, interaction: discord.Interaction, /) -> bool:
         if interaction.user.id != self.new_player.discord_id:
             await interaction.response.send_message(
-                "You are not allowed to interact with this menu.", ephemeral=True
+                "You can't interact with this menu. Sorry!", ephemeral=True
             )
             return False
         return True
@@ -161,11 +161,11 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
         except DoesNotExist:
             if user_obj == interaction.user:
                 await interaction.followup.send(
-                    f"You don't have any {settings.collectible_name} yet."
+                    f"You dont have a {settings.collectible_name} yet! You should play more!"
                 )
             else:
                 await interaction.followup.send(
-                    f"{user_obj.name} doesn't have any {settings.collectible_name} yet."
+                    f"{user_obj.name} doesn't have any {settings.collectible_name} yet!"
                 )
             return
         if user is not None:
@@ -199,11 +199,11 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
             ball_txt = countryball.country if countryball else ""
             if user_obj == interaction.user:
                 await interaction.followup.send(
-                    f"You don't have any {ball_txt} {settings.collectible_name} yet."
+                    f"You dont have a {ball_txt} {settings.collectible_name} yet! You should play more!"
                 )
             else:
                 await interaction.followup.send(
-                    f"{user_obj.name} doesn't have any {ball_txt} {settings.collectible_name} yet."
+                    f"{user_obj.name} doesn't have any {ball_txt} {settings.collectible_name} yet!"
                 )
             return
         if reverse:
@@ -214,7 +214,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
             await paginator.start()
         else:
             await paginator.start(
-                content=f"Viewing {user_obj.name}'s {settings.collectible_name}s"
+                content=f"Looking at {user_obj.name}'s {settings.collectible_name}s..."
             )
 
     @app_commands.command()
@@ -244,7 +244,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
                 player = await Player.get(discord_id=user_obj.id)
             except DoesNotExist:
                 await interaction.response.send_message(
-                    f"{user_obj.name} doesn't have any {settings.collectible_name} yet."
+                    f"{user_obj.name} doesn't have any {settings.collectible_name} yet!"
                 )
                 return
             if await inventory_privacy(self.bot, interaction, player, user_obj) is False:
@@ -264,7 +264,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
             }
         if not bot_countryballs:
             await interaction.response.send_message(
-                f"There are no {settings.collectible_name}s registered on this bot yet.",
+                f"There are no {settings.collectible_name}s registered on this bot yet!",
                 ephemeral=True,
             )
             return
@@ -323,7 +323,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
             entries.append(
                 (
                     f"__**:tada: No missing {settings.collectible_name}, "
-                    "congratulations! :tada:**__",
+                    "you are truly incredible! :tada:**__",
                     "\u200B",
                 )
             )  # force empty field value
@@ -472,15 +472,15 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
             return
         if not countryball.is_tradeable:
             await interaction.response.send_message(
-                "You cannot donate this countryball.", ephemeral=True
+                "You cannot donate this!", ephemeral=True
             )
             return
         if user.bot:
-            await interaction.response.send_message("You cannot donate to bots.")
+            await interaction.response.send_message("You cannot donate to bots, silly!")
             return
         if await countryball.is_locked():
             await interaction.response.send_message(
-                "This countryball is currently locked for a trade. Please try again later."
+                "This unit is currently locked for a trade. Sorry!"
             )
             return
         await countryball.lock_for_trade()
@@ -489,27 +489,27 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
 
         if new_player == old_player:
             await interaction.response.send_message(
-                f"You cannot give a {settings.collectible_name} to yourself."
+                f"You cannot give a {settings.collectible_name} to yourself!"
             )
             await countryball.unlock()
             return
         if new_player.donation_policy == DonationPolicy.ALWAYS_DENY:
             await interaction.response.send_message(
-                "This player does not accept donations. You can use trades instead."
+                "This player does not accept donations!"
             )
             await countryball.unlock()
             return
         if new_player.discord_id in self.bot.blacklist:
             await interaction.response.send_message(
-                "You cannot donate to a blacklisted user", ephemeral=True
+                "You cannot donate to a blacklisted user!", ephemeral=True
             )
             await countryball.unlock()
             return
         elif new_player.donation_policy == DonationPolicy.REQUEST_APPROVAL:
             await interaction.response.send_message(
-                f"Hey {user.mention}, {interaction.user.name} wants to give you "
+                f"Hey {user.mention}, {interaction.user.name} wants to gift you "
                 f"{countryball.description(include_emoji=True, bot=self.bot, is_trade=True)}!\n"
-                "Do you accept this donation?",
+                "Do you want it?",
                 view=DonationRequest(self.bot, interaction, countryball, new_player),
             )
             return
@@ -526,7 +526,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
             short=True, include_emoji=True, bot=self.bot, is_trade=True
         )
         await interaction.response.send_message(
-            f"You just gave the {settings.collectible_name} {cb_txt} to {user.mention}!"
+            f"Wowie! You just gave the {settings.collectible_name} {cb_txt} to {user.mention}!"
         )
         await countryball.unlock()
 
@@ -575,7 +575,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
         guild = f" caught in {interaction.guild.name}" if current_server else ""
         await interaction.followup.send(
             f"You have {balls} {special_str}{shiny_str}"
-            f"{country}{settings.collectible_name}{plural}{guild}."
+            f"{country}{settings.collectible_name}{plural}{guild}!"
         )
 
 
@@ -592,7 +592,7 @@ async def inventory_privacy(
             return True
     if privacy_policy == PrivacyPolicy.DENY:
         await interaction.followup.send(
-            "This user has set their inventory to private.", ephemeral=True
+            "This user has set their inventory to private!", ephemeral=True
         )
         return False
     elif privacy_policy == PrivacyPolicy.SAME_SERVER:
@@ -605,10 +605,10 @@ async def inventory_privacy(
             return False
         if interaction.guild is None:
             await interaction.followup.send(
-                "This user has set their inventory to private.", ephemeral=True
+                "This user has set their inventory to private!", ephemeral=True
             )
             return False
         elif interaction.guild.get_member(user_obj.id) is None:
-            await interaction.followup.send("This user is not in the server.", ephemeral=True)
+            await interaction.followup.send("This user is not in the server!", ephemeral=True)
             return False
     return True

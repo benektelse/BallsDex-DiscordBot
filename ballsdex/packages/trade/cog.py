@@ -28,7 +28,7 @@ if TYPE_CHECKING:
 
 class Trade(commands.GroupCog):
     """
-    Trade countryballs with other playersa
+    Trade countryballs with other players
     """
 
     def __init__(self, bot: "BallsDexBot"):
@@ -109,7 +109,7 @@ class Trade(commands.GroupCog):
             return
         if user.id == interaction.user.id:
             await interaction.response.send_message(
-                "You cannot trade with yourself.", ephemeral=True
+                "You cannot trade with yourself!", ephemeral=True
             )
             return
 
@@ -117,12 +117,12 @@ class Trade(commands.GroupCog):
         trade2, trader2 = self.get_trade(channel=interaction.channel, user=user)  # type: ignore
         if trade1 or trader1:
             await interaction.response.send_message(
-                "You already have an ongoing trade.", ephemeral=True
+                "You already have an ongoing trade!", ephemeral=True
             )
             return
         if trade2 or trader2:
             await interaction.response.send_message(
-                "The user you are trying to trade with is already in a trade.", ephemeral=True
+                "The user you are trying to trade with is already in a trade!", ephemeral=True
             )
             return
 
@@ -130,7 +130,7 @@ class Trade(commands.GroupCog):
         player2, _ = await Player.get_or_create(discord_id=user.id)
         if player2.discord_id in self.bot.blacklist:
             await interaction.response.send_message(
-                "You cannot trade with a blacklisted user.", ephemeral=True
+                "You cannot trade with a blacklisted user!", ephemeral=True
             )
             return
 
@@ -165,7 +165,7 @@ class Trade(commands.GroupCog):
             return
         if not countryball.is_tradeable:
             await interaction.response.send_message(
-                "You cannot trade this countryball.", ephemeral=True
+                "You cannot trade this countryball!", ephemeral=True
             )
             return
         await interaction.response.defer(ephemeral=True, thinking=True)
@@ -193,7 +193,7 @@ class Trade(commands.GroupCog):
             return
         if countryball in trader.proposal:
             await interaction.followup.send(
-                f"You already have this {settings.collectible_name} in your proposal.",
+                f"You already have this {settings.collectible_name} in the trade!",
                 ephemeral=True,
             )
             return
@@ -227,7 +227,7 @@ class Trade(commands.GroupCog):
         trade, trader = self.get_trade(interaction)
         if not trade or not trader:
             await interaction.response.send_message(
-                "You do not have an ongoing trade.", ephemeral=True
+                "You do not have an ongoing trade!", ephemeral=True
             )
             return
         if trader.locked:
@@ -239,12 +239,12 @@ class Trade(commands.GroupCog):
             return
         if countryball not in trader.proposal:
             await interaction.response.send_message(
-                f"That {settings.collectible_name} is not in your proposal.", ephemeral=True
+                f"That {settings.collectible_name} is not in the trade!", ephemeral=True
             )
             return
         trader.proposal.remove(countryball)
         await interaction.response.send_message(
-            f"{countryball.countryball.country} removed.", ephemeral=True
+            f"{countryball.countryball.country} removed! Yippee!", ephemeral=True
         )
         await countryball.unlock()
 
@@ -256,12 +256,12 @@ class Trade(commands.GroupCog):
         trade, trader = self.get_trade(interaction)
         if not trade or not trader:
             await interaction.response.send_message(
-                "You do not have an ongoing trade.", ephemeral=True
+                "You do not have an ongoing trade!", ephemeral=True
             )
             return
 
         await trade.user_cancel(trader)
-        await interaction.response.send_message("Trade cancelled.", ephemeral=True)
+        await interaction.response.send_message("Trade cancelled!", ephemeral=True)
 
     @app_commands.command()
     @app_commands.choices(
@@ -294,7 +294,7 @@ class Trade(commands.GroupCog):
 
         if days is not None and days < 0:
             await interaction.followup.send(
-                "Invalid number of days. Please provide a non-negative value.", ephemeral=True
+                "Please provide a non-negative value!", ephemeral=True
             )
             return
 
@@ -316,7 +316,7 @@ class Trade(commands.GroupCog):
         history = await queryset.order_by(sorting.value).prefetch_related("player1", "player2")
 
         if not history:
-            await interaction.followup.send("No history found.", ephemeral=True)
+            await interaction.followup.send("No history found!", ephemeral=True)
             return
         source = TradeViewFormat(history, interaction.user.name, self.bot)
         pages = Pages(source=source, interaction=interaction)

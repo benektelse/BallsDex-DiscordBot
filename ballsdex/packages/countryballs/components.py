@@ -51,7 +51,7 @@ class CountryballNamePrompt(Modal, title=f"Catch this {settings.collectible_name
         # TODO: use lock
         if self.ball.catched:
             await interaction.response.send_message(
-                f"{interaction.user.mention} I was caught already!"
+                f"{interaction.user.mention} Too slow, silly!"
             )
             return
         if self.ball.model.catch_names:
@@ -67,16 +67,16 @@ class CountryballNamePrompt(Modal, title=f"Catch this {settings.collectible_name
 
             special = ""
             if ball.shiny:
-                special += f"✨ ***It's a shiny {settings.collectible_name}!*** ✨\n"
+                special += f"✨ ***Is this {settings.collectible_name} glowing?!*** ✨\n"
             if ball.specialcard and ball.specialcard.catch_phrase:
                 special += f"*{ball.specialcard.catch_phrase}*\n"
             if has_caught_before:
                 special += (
-                    f"This is a **new {settings.collectible_name}** "
-                    "that has been added to your completion!"
+                    f"Woah... is that a **new {settings.collectible_name}** "
+                    "you've just caught?!"
                 )
             await interaction.followup.send(
-                f"{interaction.user.mention} You caught **{self.ball.name}!** "
+                f"Nice, {interaction.user.mention}! You just got **{self.ball.name}!** "
                 f"`(#{ball.pk:0X}, {ball.attack_bonus:+}%/{ball.health_bonus:+}%)`\n\n"
                 f"{special}"
             )
@@ -91,8 +91,8 @@ class CountryballNamePrompt(Modal, title=f"Catch this {settings.collectible_name
         player, created = await Player.get_or_create(discord_id=user.id)
 
         # stat may vary by +/- 20% of base stat
-        bonus_attack = random.randint(-20, 20)
-        bonus_health = random.randint(-20, 20)
+        bonus_attack = random.randint(-30, 30)
+        bonus_health = random.randint(-30, 30)
         shiny = random.randint(1, 2048) == 1
 
         # check if we can spawn cards with a special background
@@ -149,7 +149,7 @@ class CatchButton(Button):
 
     async def callback(self, interaction: discord.Interaction):
         if self.ball.catched:
-            await interaction.response.send_message("I was caught already!", ephemeral=True)
+            await interaction.response.send_message("Too slow, silly!", ephemeral=True)
         else:
             await interaction.response.send_modal(CountryballNamePrompt(self.ball, self))
 

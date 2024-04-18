@@ -236,10 +236,10 @@ class Pages(discord.ui.View):
         timed_out = await modal.wait()
 
         if timed_out:
-            await interaction.followup.send("Took too long", ephemeral=True)
+            await interaction.followup.send("Took too long!", ephemeral=True)
             return
         elif self.is_finished():
-            await modal.interaction.response.send_message("Took too long", ephemeral=True)
+            await modal.interaction.response.send_message("Took too long!", ephemeral=True)
             return
 
         value = str(modal.page.value)

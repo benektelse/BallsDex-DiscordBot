@@ -28,7 +28,7 @@ credits_font = ImageFont.truetype(str(SOURCES_PATH / "arial.ttf"), 40)
 
 def draw_card(ball_instance: "BallInstance"):
     ball = ball_instance.countryball
-    ball_health = (237, 115, 101, 255)
+    ball_health = (255, 255, 255, 255)
 
     if ball_instance.shiny:
         image = Image.open(str(SOURCES_PATH / "shiny.png"))
@@ -46,7 +46,7 @@ def draw_card(ball_instance: "BallInstance"):
             (100, 1050 + 100 * i),
             line,
             font=capacity_name_font,
-            fill=(230, 230, 230, 255),
+            fill=(255, 255, 255, 255),
             stroke_width=2,
             stroke_fill=(0, 0, 0, 255),
         )
@@ -70,7 +70,7 @@ def draw_card(ball_instance: "BallInstance"):
         (1120, 1670),
         str(ball_instance.attack),
         font=stats_font,
-        fill=(252, 194, 76, 255),
+        fill=(255, 255, 255, 255),
         stroke_width=1,
         stroke_fill=(0, 0, 0, 255),
         anchor="ra",

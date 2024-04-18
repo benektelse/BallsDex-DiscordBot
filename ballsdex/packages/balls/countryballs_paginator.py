@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 class CountryballsSource(menus.ListPageSource):
     def __init__(self, entries: List[BallInstance]):
-        super().__init__(entries, per_page=25)
+        super().__init__(entries, per_page=50)
 
     async def format_page(self, menu: CountryballsSelector, balls: List[BallInstance]):
         menu.set_options(balls)
@@ -39,7 +39,7 @@ class CountryballsSelector(Pages):
                 discord.SelectOption(
                     label=f"{favorite}{shiny}{special}#{ball.pk:0X} {ball.countryball.country}",
                     description=f"ATK: {ball.attack_bonus:+d}% • HP: {ball.health_bonus:+d}% • "
-                    f"Caught on {ball.catch_date.strftime('%d/%m/%y %H:%M')}",
+                    f"You caught this on {ball.catch_date.strftime('%d/%m/%y %H:%M')}.",
                     emoji=emoji,
                     value=f"{ball.pk}",
                 )

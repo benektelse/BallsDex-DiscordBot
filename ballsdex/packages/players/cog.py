@@ -46,7 +46,7 @@ class Player(commands.GroupCog):
         player.privacy_policy = policy
         await player.save()
         await interaction.response.send_message(
-            f"Your privacy policy has been set to **{policy.name}**.", ephemeral=True
+            f"Your privacy policy has been set to **{policy.name}**!", ephemeral=True
         )
 
     @app_commands.command()
@@ -74,18 +74,18 @@ class Player(commands.GroupCog):
         player.donation_policy = DonationPolicy(policy.value)
         if policy.value == DonationPolicy.ALWAYS_ACCEPT:
             await interaction.response.send_message(
-                f"Setting updated, you will now receive all donated {settings.collectible_name}s "
-                "immediately."
+                f"You will now receive all donated {settings.collectible_name}s "
+                "immediately!"
             )
         elif policy.value == DonationPolicy.REQUEST_APPROVAL:
             await interaction.response.send_message(
-                "Setting updated, you will now have to approve donation requests manually."
+                "You will now have to approve donation requests manually!"
             )
         elif policy.value == DonationPolicy.ALWAYS_DENY:
             await interaction.response.send_message(
-                "Setting updated, it is now impossible to use "
+                "It is now impossible to use "
                 f"`{settings.players_group_cog_name} give` with "
-                "you. It is still possible to perform donations using the trade system."
+                "you!"
             )
         else:
             await interaction.response.send_message("Invalid input!")
