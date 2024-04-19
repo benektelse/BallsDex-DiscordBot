@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 class CountryballsSource(menus.ListPageSource):
     def __init__(self, entries: List[BallInstance]):
-        super().__init__(entries, per_page=50)
+        super().__init__(entries, per_page=25)
 
     async def format_page(self, menu: CountryballsSelector, balls: List[BallInstance]):
         menu.set_options(balls)
