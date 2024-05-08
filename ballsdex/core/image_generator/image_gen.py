@@ -22,8 +22,9 @@ artwork_size = [b - a for a, b in zip(*CORNERS)]
 title_font = ImageFont.truetype(str(SOURCES_PATH / "ArsenicaTrial-Extrabold.ttf"), 165)
 capacity_name_font = ImageFont.truetype(str(SOURCES_PATH / "Bobby Jones Soft.otf"), 90)
 capacity_description_font = ImageFont.truetype(str(SOURCES_PATH / "OpenSans-Semibold.ttf"), 55)
-stats_font = ImageFont.truetype(str(SOURCES_PATH / "Bobby Jones Soft.otf"), 130)
-credits_font = ImageFont.truetype(str(SOURCES_PATH / "arial.ttf"), 30)
+stats_font = ImageFont.truetype(str(SOURCES_PATH / "Bobby Jones Soft.otf"), 90)
+stats_percent = ImageFont.truetype(str(SOURCES_PATH / "Pusab.ttf"), 50)
+credits_font = ImageFont.truetype(str(SOURCES_PATH / "arial.ttf"), 40)
 
 
 def draw_card(ball_instance: "BallInstance"):
@@ -47,7 +48,7 @@ def draw_card(ball_instance: "BallInstance"):
             line,
             font=capacity_name_font,
             fill=(255, 255, 255, 255),
-            stroke_width=2,
+            stroke_width=3,
             stroke_fill=(0, 0, 0, 255),
         )
     for i, line in enumerate(textwrap.wrap(ball.capacity_description, width=40)):
@@ -55,23 +56,40 @@ def draw_card(ball_instance: "BallInstance"):
             (60, 1370 + 50 * i),
             line,
             font=capacity_description_font,
-            stroke_width=1,
+            stroke_width=3,
             stroke_fill=(0, 0, 0, 255),
         )
     draw.text(
-        (320, 1710),
+        (320, 1725),
         str(ball_instance.health),
         font=stats_font,
         fill=ball_health,
-        stroke_width=1,
+        stroke_width=3,
         stroke_fill=(0, 0, 0, 255),
     )
     draw.text(
-        (1120, 1710),
+        (1120, 1725),
         str(ball_instance.attack),
         font=stats_font,
         fill=(255, 255, 255, 255),
-        stroke_width=1,
+        stroke_width=3,
+        stroke_fill=(0, 0, 0, 255),
+        anchor="ra",
+    )
+    draw.text(
+        (320, 1795),
+        str("({}%)").format(ball_instance.health_bonus),
+        font=stats_percent,
+        fill=(255, 255, 255, 255),
+        stroke_width=3,
+        stroke_fill=(0, 0, 0, 255),
+    )
+    draw.text(
+        (1120, 1795),
+        str("({}%)").format(ball_instance.attack_bonus),
+        font=stats_percent,
+        fill=(255, 255, 255, 255),
+        stroke_width=3,
         stroke_fill=(0, 0, 0, 255),
         anchor="ra",
     )
