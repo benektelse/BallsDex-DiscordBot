@@ -44,7 +44,7 @@ def draw_card(ball_instance: "BallInstance"):
     )
 
     draw = ImageDraw.Draw(image)
-    draw.text((50, 90), ball.short_name or ball.country, font=title_font)
+    draw.text((50, 90), ball.short_name or ball.country, font=title_font, stroke_width=6, stroke_fill=(0, 0, 0, 255))
     for i, line in enumerate(textwrap.wrap(f"Ability: {ball.capacity_name}", width=26)):
         draw.text(
             (70, 1070 + 75 * i),
@@ -79,23 +79,44 @@ def draw_card(ball_instance: "BallInstance"):
         stroke_fill=(0, 0, 0, 255),
         anchor="ra",
     )
-    draw.text(
-        (320, 1795),
-        str("({}%)").format(ball_instance.health_bonus),
-        font=stats_percent,
-        fill=(255, 255, 255, 255),
-        stroke_width=3,
-        stroke_fill=(0, 0, 0, 255),
-    )
-    draw.text(
-        (1120, 1795),
-        str("({}%)").format(ball_instance.attack_bonus),
-        font=stats_percent,
-        fill=(255, 255, 255, 255),
-        stroke_width=3,
-        stroke_fill=(0, 0, 0, 255),
-        anchor="ra",
-    )
+    if ball_instance.health_bonus >= 0:
+        draw.text(
+            (320, 1795),
+            str("(+{}%)").format(ball_instance.health_bonus),
+            font=stats_percent,
+            fill=(255, 255, 255, 255),
+            stroke_width=3,
+            stroke_fill=(0, 0, 0, 255),
+        )
+    else:
+         draw.text(
+            (320, 1795),
+            str("({}%)").format(ball_instance.health_bonus),
+            font=stats_percent,
+            fill=(255, 255, 255, 255),
+            stroke_width=3,
+            stroke_fill=(0, 0, 0, 255),
+        )
+    if ball_instance.attack_bonus >= 0:
+        draw.text(
+            (1120, 1795),
+            str("(+{}%)").format(ball_instance.attack_bonus),
+            font=stats_percent,
+            fill=(255, 255, 255, 255),
+            stroke_width=3,
+            stroke_fill=(0, 0, 0, 255),
+            anchor="ra",
+        )
+    else:
+         draw.text(
+            (1120, 1795),
+            str("({}%)").format(ball_instance.attack_bonus),
+            font=stats_percent,
+            fill=(255, 255, 255, 255),
+            stroke_width=3,
+            stroke_fill=(0, 0, 0, 255),
+            anchor="ra",
+        )
     draw.text(
         (30, 1870),
         # Modifying the line below is breaking the licence as you are removing credits

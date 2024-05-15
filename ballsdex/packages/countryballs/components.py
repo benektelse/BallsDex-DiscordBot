@@ -28,7 +28,7 @@ class CountryballNamePrompt(Modal, title=f"Catch this {settings.collectible_name
     name = TextInput(
         label=f"Name of this {settings.collectible_name}",
         style=discord.TextStyle.short,
-        placeholder="Your guess",
+        placeholder="Guess!",
     )
 
     def __init__(self, ball: "CountryBall", button: CatchButton):
@@ -67,7 +67,7 @@ class CountryballNamePrompt(Modal, title=f"Catch this {settings.collectible_name
 
             special = ""
             if ball.shiny:
-                special += f"✨ ***Is this {settings.collectible_name} glowing?!*** ✨\n"
+                special += f"✨ ***Is this {settings.collectible_name} glowing...?*** ✨\n"
             if ball.specialcard and ball.specialcard.catch_phrase:
                 special += f"*{ball.specialcard.catch_phrase}*\n"
             if has_caught_before:
@@ -76,7 +76,7 @@ class CountryballNamePrompt(Modal, title=f"Catch this {settings.collectible_name
                     "you've just caught?!"
                 )
             await interaction.followup.send(
-                f"Nice, {interaction.user.mention}! You just got **{self.ball.name}!** "
+                f"Nice, {interaction.user.mention}! You caught **{self.ball.name}!** "
                 f"`(#{ball.pk:0X}, {ball.attack_bonus:+}%/{ball.health_bonus:+}%)`\n\n"
                 f"{special}"
             )
@@ -90,7 +90,7 @@ class CountryballNamePrompt(Modal, title=f"Catch this {settings.collectible_name
     ) -> tuple[BallInstance, bool]:
         player, created = await Player.get_or_create(discord_id=user.id)
 
-        # stat may vary by +/- 20% of base stat
+        # stat may vary by +/- 30% of base stat
         bonus_attack = random.randint(-30, 30)
         bonus_health = random.randint(-30, 30)
         shiny = random.randint(1, 2048) == 1
@@ -144,7 +144,7 @@ class CountryballNamePrompt(Modal, title=f"Catch this {settings.collectible_name
 
 class CatchButton(Button):
     def __init__(self, ball: "CountryBall"):
-        super().__init__(style=discord.ButtonStyle.primary, label="Catch me!")
+        super().__init__(style=discord.ButtonStyle.primary, label="Catch?")
         self.ball = ball
 
     async def callback(self, interaction: discord.Interaction):
