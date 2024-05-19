@@ -30,10 +30,15 @@ credits_font = ImageFont.truetype(str(SOURCES_PATH / "arial.ttf"), 40)
 def draw_card(ball_instance: "BallInstance"):
     ball = ball_instance.countryball
     ball_health = (255, 255, 255, 255)
-
+    ball_attack = (255, 255, 255, 255)
+    ball_health_bonus = (255, 255, 255, 255)
+    ball_attack_bonus = (255, 255, 255, 255)
     if ball_instance.shiny:
         image = Image.open(str(SOURCES_PATH / "shiny.png"))
         ball_health = (255, 255, 255, 255)
+        ball_attack = (255, 255, 255, 255)
+        ball_health_bonus = (255, 255, 255, 255)
+        ball_attack_bonus = (255, 255, 255, 255)
     elif special_image := ball_instance.special_card:
         image = Image.open("." + special_image)
     else:
@@ -74,7 +79,6 @@ def draw_card(ball_instance: "BallInstance"):
         (1120, 1725),
         str(ball_instance.attack),
         font=stats_font,
-        fill=(255, 255, 255, 255),
         stroke_width=3,
         stroke_fill=(0, 0, 0, 255),
         anchor="ra",
@@ -84,7 +88,6 @@ def draw_card(ball_instance: "BallInstance"):
             (320, 1795),
             str("(+{}%)").format(ball_instance.health_bonus),
             font=stats_percent,
-            fill=(255, 255, 255, 255),
             stroke_width=3,
             stroke_fill=(0, 0, 0, 255),
         )
@@ -93,7 +96,6 @@ def draw_card(ball_instance: "BallInstance"):
             (320, 1795),
             str("({}%)").format(ball_instance.health_bonus),
             font=stats_percent,
-            fill=(255, 255, 255, 255),
             stroke_width=3,
             stroke_fill=(0, 0, 0, 255),
         )
@@ -102,7 +104,6 @@ def draw_card(ball_instance: "BallInstance"):
             (1120, 1795),
             str("(+{}%)").format(ball_instance.attack_bonus),
             font=stats_percent,
-            fill=(255, 255, 255, 255),
             stroke_width=3,
             stroke_fill=(0, 0, 0, 255),
             anchor="ra",
@@ -112,10 +113,72 @@ def draw_card(ball_instance: "BallInstance"):
             (1120, 1795),
             str("({}%)").format(ball_instance.attack_bonus),
             font=stats_percent,
-            fill=(255, 255, 255, 255),
             stroke_width=3,
             stroke_fill=(0, 0, 0, 255),
             anchor="ra",
+        )
+    draw.text(
+        (2470, 30),
+        str(ball_instance.health),
+        font=stats_font,
+        stroke_width=3,
+        stroke_fill=(0, 0, 0, 255),
+    )
+    draw.text(
+        (1820, 30),
+        str(ball_instance.attack),
+        font=stats_font,
+        stroke_width=3,
+        stroke_fill=(0, 0, 0, 255),
+    )
+    if ball_instance.health_bonus >= 0:
+        draw.text(
+            (2470, 100),
+            str("(+{}%)").format(ball_instance.health_bonus),
+            font=stats_percent,
+            stroke_width=3,
+            stroke_fill=(0, 0, 0, 255),
+        )
+    else:
+         draw.text(
+            (2470, 100),
+            str("({}%)").format(ball_instance.health_bonus),
+            font=stats_percent,
+            stroke_width=3,
+            stroke_fill=(0, 0, 0, 255),
+        )
+    if ball_instance.attack_bonus >= 0:
+        draw.text(
+            (1820, 100),
+            str("(+{}%)").format(ball_instance.attack_bonus),
+            font=stats_percent,
+            stroke_width=3,
+            stroke_fill=(0, 0, 0, 255),
+        )
+    else:
+         draw.text(
+            (1820, 100),
+            str("({}%)").format(ball_instance.attack_bonus),
+            font=stats_percent,
+            stroke_width=3,
+            stroke_fill=(0, 0, 0, 255),
+        )
+    for i, line in enumerate(textwrap.wrap(f"Ability: {ball.capacity_name}", width=26)):
+        draw.text(
+            (1750, 200 + 75 * i),
+            line,
+            font=capacity_name_font,
+            fill=(255, 255, 255, 255),
+            stroke_width=3,
+            stroke_fill=(0, 0, 0, 255),
+        )
+    for i, line in enumerate(textwrap.wrap(ball.capacity_description, width=40)):
+        draw.text(
+            (1750, 400 + 50 * i),
+            line,
+            font=capacity_description_font,
+            stroke_width=3,
+            stroke_fill=(0, 0, 0, 255),
         )
     draw.text(
         (30, 1870),
@@ -127,7 +190,30 @@ def draw_card(ball_instance: "BallInstance"):
         stroke_width=0,
         stroke_fill=(255, 255, 255, 255),
     )
-
+    draw.text(
+        (30, 1927),
+        str("ID {}").format(hex(ball_instance.pk).upper()[2:]),
+        font=credits_font,
+        fill=(0, 0, 0, 255),
+        stroke_width=0,
+        stroke_fill=(255, 255, 255, 255),
+    )
+    draw.text(
+        (1700, 900),
+        "Created by El Laggron\n" f"Artwork author: {ball.credits}",
+        font=credits_font,
+        fill=(0, 0, 0, 255),
+        stroke_width=0,
+        stroke_fill=(255, 255, 255, 255),
+    )
+    draw.text(
+        (1700, 957),
+        str("ID {}").format(hex(ball_instance.pk).upper()[2:]),
+        font=credits_font,
+        fill=(0, 0, 0, 255),
+        stroke_width=0,
+        stroke_fill=(255, 255, 255, 255),
+    )
     artwork = Image.open("." + ball.collection_card).convert("RGBA")
     image.paste(ImageOps.fit(artwork, artwork_size), CORNERS[0])  # type: ignore
 
