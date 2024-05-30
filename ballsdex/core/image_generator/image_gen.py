@@ -199,6 +199,14 @@ def draw_card(ball_instance: "BallInstance"):
         stroke_fill=(255, 255, 255, 255),
     )
     draw.text(
+        (30, 1956),
+        str("Catch Date: {}".format(ball_instance.catch_date)[:22]),
+        font=credits_font,
+        fill=(0, 0, 0, 255),
+        stroke_width=0,
+        stroke_fill=(255, 255, 255, 255),
+    )
+    draw.text(
         (1700, 900),
         "Created by El Laggron\n" f"Artwork author: {ball.credits}",
         font=credits_font,
@@ -209,6 +217,14 @@ def draw_card(ball_instance: "BallInstance"):
     draw.text(
         (1700, 957),
         str("ID {}").format(hex(ball_instance.pk).upper()[2:]),
+        font=credits_font,
+        fill=(0, 0, 0, 255),
+        stroke_width=0,
+        stroke_fill=(255, 255, 255, 255),
+    )
+    draw.text(
+        (1700, 986),
+        str("Catch Date: {}".format(ball_instance.catch_date)[:22]),
         font=credits_font,
         fill=(0, 0, 0, 255),
         stroke_width=0,
