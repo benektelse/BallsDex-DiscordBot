@@ -141,10 +141,10 @@ class CountryballNamePrompt(Modal, title=f"Catch this {settings.collectible_name
             ).inc()
         return ball, is_new
 
-
+btnlst = ["Catch?", "Catch!", "Catch...", "Catch, you silly!", "Catch this icon?", "Will you catch this?", "Catching this icon...", "Catch it before it despawns!!!", "Please catch this...", "I have multiple reasons as to why you should catch this icon."]
 class CatchButton(Button):
     def __init__(self, ball: "CountryBall"):
-        super().__init__(style=discord.ButtonStyle.primary, label="Catch?")
+        super().__init__(style=discord.ButtonStyle.primary, label=(random.choice(btnlst)))
         self.ball = ball
 
     async def callback(self, interaction: discord.Interaction):
