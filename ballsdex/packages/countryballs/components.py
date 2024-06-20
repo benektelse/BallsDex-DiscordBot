@@ -141,7 +141,7 @@ class CountryballNamePrompt(Modal, title=f"Catch this {settings.collectible_name
             ).inc()
         return ball, is_new
 
-btnlst = ["Catch?", "Catch!", "Catch...", "Catch, you silly!", "Catch this icon?", "Will you catch this?", "Catching this icon...", "Catch it before it despawns!!!", "Please catch this...", "I have multiple reasons as to why you should catch this icon."]
+btnlst = ["Catch?", "Catch!", "Catch...", "Catch, you silly!", "Catch this icon?", "Will you catch this?", "Catching this icon...", "Catch it before it despawns!!!", "Please catch this...", "What if... you caught this?", "Acquire... the icon.", "This is a button!", "This is an icon!", "Are you cool? Catch this!", "I wonder how many icons you've caught...", "The catcher.", "You're silly.", "✅", "🔥", "Seize the icon...", "You gon' take it?", "Hauling in this icon...", "Someone's gonna snipe this.", "Don't copy and paste on me!", "ARREST THIS ICON! IT'S BEING SILLY WITHOUT A PERMIT!", "CEASE THE SEIZE!", "Apprehend him!", "This icon deserves to be caught.", "This is my favorite icon.", "For real!"]
 class CatchButton(Button):
     def __init__(self, ball: "CountryBall"):
         super().__init__(style=discord.ButtonStyle.primary, label=(random.choice(btnlst)))
