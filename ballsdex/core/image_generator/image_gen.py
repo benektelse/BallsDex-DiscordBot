@@ -198,9 +198,18 @@ def draw_card(ball_instance: "BallInstance"):
         stroke_width=0,
         stroke_fill=(255, 255, 255, 255),
     )
+    tmfcg = (f"{ball_instance.catch_date}"[11:19])
     draw.text(
         (30, 1956),
         str("Catch Date: {}".format(ball_instance.catch_date)[:22]),
+        font=credits_font,
+        fill=(0, 0, 0, 255),
+        stroke_width=0,
+        stroke_fill=(255, 255, 255, 255),
+    )
+    draw.text(
+        (550, 1956),
+        str("(Time: {} UTC)".format(tmfcg)),
         font=credits_font,
         fill=(0, 0, 0, 255),
         stroke_width=0,
@@ -225,6 +234,14 @@ def draw_card(ball_instance: "BallInstance"):
     draw.text(
         (1700, 986),
         str("Catch Date: {}".format(ball_instance.catch_date)[:22]),
+        font=credits_font,
+        fill=(0, 0, 0, 255),
+        stroke_width=0,
+        stroke_fill=(255, 255, 255, 255),
+    )
+    draw.text(
+        (2220, 986),
+        str("(Time: {} UTC)".format(tmfcg)),
         font=credits_font,
         fill=(0, 0, 0, 255),
         stroke_width=0,
