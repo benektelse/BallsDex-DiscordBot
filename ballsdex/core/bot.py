@@ -4,6 +4,7 @@ import asyncio
 import inspect
 import logging
 import math
+import time
 import types
 from datetime import datetime
 from typing import TYPE_CHECKING, cast
@@ -12,12 +13,9 @@ import aiohttp
 import discord
 import discord.gateway
 from cachetools import TTLCache
+from aiohttp import ClientTimeout
 from discord import app_commands
-from discord.app_commands.translator import (
-    TranslationContextLocation,
-    TranslationContextTypes,
-    locale_str,
-)
+from discord.app_commands.translator import TranslationContextTypes, locale_str
 from discord.enums import Locale
 from discord.ext import commands
 from prometheus_client import Histogram
@@ -59,11 +57,6 @@ class Translator(app_commands.Translator):
     async def translate(
         self, string: locale_str, locale: Locale, context: TranslationContextTypes
     ) -> str | None:
-        if context.location in (
-            TranslationContextLocation.choice_name,
-            TranslationContextLocation.other,
-        ):
-            return None
         return string.message.replace("countryball", settings.collectible_name).replace(
             "BallsDex", settings.bot_name
         )
@@ -118,7 +111,7 @@ class CommandTree(app_commands.CommandTree):
             if interaction.type != discord.InteractionType.autocomplete:
                 await interaction.response.send_message(
                     "The bot is currently starting, please wait for a few minutes... "
-                    f"({round((len(bot.shards)/bot.shard_count)*100)}%)",
+                    f"({round((len(bot.shards) / bot.shard_count) * 100)}%)",
                     ephemeral=True,
                 )
             return False  # wait for all shards to be connected
@@ -242,7 +235,9 @@ class BallsDexBot(commands.AutoShardedBot):
                 "ws://", "http://"
             )
             async with aiohttp.ClientSession() as session:
-                async with session.get(f"{base_url}/health", timeout=10) as resp:
+                async with session.get(
+                    f"{base_url}/health", timeout=ClientTimeout(total=10)
+                ) as resp:
                     return resp.status == 200
         except (aiohttp.ClientConnectionError, asyncio.TimeoutError):
             return False
@@ -419,7 +414,7 @@ class BallsDexBot(commands.AutoShardedBot):
             if isinstance(error, app_commands.CommandOnCooldown):
                 await send(
                     "This command is on cooldown. Please retry "
-                    f"in {math.ceil(error.retry_after)} seconds."
+                    f"<t:{math.ceil(time.time() + error.retry_after)}:R>."
                 )
                 return
             await send("You are not allowed to use that command.")
