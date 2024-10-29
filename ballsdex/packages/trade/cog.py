@@ -113,7 +113,7 @@ class Trade(commands.GroupCog):
             return
         if user.id == interaction.user.id:
             await interaction.response.send_message(
-                "You cannot trade with yourself.", ephemeral=True
+                "You cannot trade with yourself!", ephemeral=True
             )
             return
         player1, _ = await Player.get_or_create(discord_id=interaction.user.id)
@@ -135,12 +135,12 @@ class Trade(commands.GroupCog):
         trade2, trader2 = self.get_trade(channel=interaction.channel, user=user)  # type: ignore
         if trade1 or trader1:
             await interaction.response.send_message(
-                "You already have an ongoing trade.", ephemeral=True
+                "You already have an ongoing trade!", ephemeral=True
             )
             return
         if trade2 or trader2:
             await interaction.response.send_message(
-                "The user you are trying to trade with is already in a trade.", ephemeral=True
+                "The user you are trying to trade with is already in a trade!", ephemeral=True
             )
             return
 
@@ -148,7 +148,7 @@ class Trade(commands.GroupCog):
         player2, _ = await Player.get_or_create(discord_id=user.id)
         if player2.discord_id in self.bot.blacklist:
             await interaction.response.send_message(
-                "You cannot trade with a blacklisted user.", ephemeral=True
+                "You cannot trade with a blacklisted user!", ephemeral=True
             )
             return
 
@@ -183,7 +183,7 @@ class Trade(commands.GroupCog):
             return
         if not countryball.is_tradeable:
             await interaction.response.send_message(
-                f"You cannot trade this {settings.collectible_name}.", ephemeral=True
+                f"You cannot trade this {settings.collectible_name}!", ephemeral=True
             )
             return
         await interaction.response.defer(ephemeral=True, thinking=True)
@@ -216,14 +216,14 @@ class Trade(commands.GroupCog):
             return
         if countryball in trader.proposal:
             await interaction.followup.send(
-                f"You already have this {settings.collectible_name} in your proposal.",
+                f"You already have this {settings.collectible_name} in the trade!",
                 ephemeral=True,
             )
             return
         if await countryball.is_locked():
             await interaction.followup.send(
                 f"This {settings.collectible_name} is currently in an active trade or donation, "
-                "please try again later.",
+                "please try again later!",
                 ephemeral=True,
             )
             return
@@ -281,12 +281,22 @@ class Trade(commands.GroupCog):
             )
             return
         balls = [x for x in balls if x.is_tradeable]
+        balls = balls[: len(balls) - (len(balls) % 25)]
 
+        if len(balls) < 25:
+            await interaction.followup.send(
+                f"You have less than 25 {settings.collectible_name}s, "
+                "you can use the add command instead.",
+                ephemeral=True,
+            )
+            return
         view = BulkAddView(interaction, balls, self)  # type: ignore
         await view.start(
             content=f"Select the {settings.plural_collectible_name} you want to add "
             "to your proposal, note that the display will wipe on pagination however "
-            f"the selected {settings.plural_collectible_name} will remain."
+            f"the selected {settings.plural_collectible_name} will remain.\n"
+            "Icons were rounded down to closest 25 for "
+            "display purposes, final page may be missing entries."
         )
 
     @app_commands.command(extras={"trade": TradeCommandType.REMOVE})
@@ -315,7 +325,7 @@ class Trade(commands.GroupCog):
         trade, trader = self.get_trade(interaction)
         if not trade or not trader:
             await interaction.response.send_message(
-                "You do not have an ongoing trade.", ephemeral=True
+                "You do not have an ongoing trade!", ephemeral=True
             )
             return
         if trader.locked:
@@ -327,12 +337,12 @@ class Trade(commands.GroupCog):
             return
         if countryball not in trader.proposal:
             await interaction.response.send_message(
-                f"That {settings.collectible_name} is not in your proposal.", ephemeral=True
+                f"That {settings.collectible_name} is not in the trade!", ephemeral=True
             )
             return
         trader.proposal.remove(countryball)
         await interaction.response.send_message(
-            f"{countryball.countryball.country} removed.", ephemeral=True
+            f"{countryball.countryball.country} removed! Yippee!", ephemeral=True
         )
         await countryball.unlock()
 
@@ -344,12 +354,12 @@ class Trade(commands.GroupCog):
         trade, trader = self.get_trade(interaction)
         if not trade or not trader:
             await interaction.response.send_message(
-                "You do not have an ongoing trade.", ephemeral=True
+                "You do not have an ongoing trade!", ephemeral=True
             )
             return
 
         await trade.user_cancel(trader)
-        await interaction.response.send_message("Trade cancelled.", ephemeral=True)
+        await interaction.response.send_message("Trade cancelled!", ephemeral=True)
 
     @app_commands.command()
     @app_commands.choices(
@@ -385,7 +395,7 @@ class Trade(commands.GroupCog):
 
         if days is not None and days < 0:
             await interaction.followup.send(
-                "Invalid number of days. Please provide a non-negative value.", ephemeral=True
+                "Please provide a non-negative value!", ephemeral=True
             )
             return
 
@@ -412,7 +422,7 @@ class Trade(commands.GroupCog):
         )
 
         if not history:
-            await interaction.followup.send("No history found.", ephemeral=True)
+            await interaction.followup.send("No history found!", ephemeral=True)
             return
 
         source = TradeViewFormat(history, interaction.user.name, self.bot)
