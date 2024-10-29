@@ -77,7 +77,7 @@ class Player(commands.GroupCog):
         player.privacy_policy = PrivacyPolicy(policy.value)
         await player.save()
         await interaction.response.send_message(
-            f"Your privacy policy has been set to **{policy.name}**!", ephemeral=True
+            f"Your privacy policy has been set to **{policy.name}**.", ephemeral=True
         )
 
     @policy.command()

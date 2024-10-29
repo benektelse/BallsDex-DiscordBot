@@ -65,7 +65,7 @@ class Core(commands.Cog):
         next start.
         """
         await self.bot.load_cache()
-        await ctx.message.add_reaction("🔥")
+        await ctx.message.add_reaction("✅")
 
     @commands.command()
     @commands.is_owner()
