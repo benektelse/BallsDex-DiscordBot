@@ -45,7 +45,7 @@ class DonationRequest(View):
     async def interaction_check(self, interaction: discord.Interaction, /) -> bool:
         if interaction.user.id != self.new_player.discord_id:
             await interaction.response.send_message(
-                "You are not allowed to interact with this menu.", ephemeral=True
+                "You can't interact with this menu. Sorry!", ephemeral=True
             )
             return False
         return True
@@ -159,11 +159,11 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
         except DoesNotExist:
             if user_obj == interaction.user:
                 await interaction.followup.send(
-                    f"You don't have any {settings.plural_collectible_name} yet."
+                    f"You don't have any {settings.plural_collectible_name} yet! You should play more!"
                 )
             else:
                 await interaction.followup.send(
-                    f"{user_obj.name} doesn't have any {settings.plural_collectible_name} yet."
+                    f"{user_obj.name} doesn't have any {settings.plural_collectible_name} yet! They should play more!"
                 )
             return
         if user is not None:
@@ -174,7 +174,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
         blocked = await player.is_blocked(interaction_player)
         if blocked and not is_staff(interaction):
             await interaction.followup.send(
-                "You cannot view the list of a user that has you blocked.", ephemeral=True
+                "You cannot view the list of a user that has you blocked!", ephemeral=True
             )
             return
 
@@ -222,12 +222,12 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
 
             if user_obj == interaction.user:
                 await interaction.followup.send(
-                    f"You don't have any {combined} {settings.plural_collectible_name} yet."
+                    f"You don't have any {combined} {settings.plural_collectible_name} yet! You should play more!"
                 )
             else:
                 await interaction.followup.send(
                     f"{user_obj.name} doesn't have any {combined} "
-                    f"{settings.plural_collectible_name} yet."
+                    f"{settings.plural_collectible_name} yet! They should play more!"
                 )
             return
         if reverse:
@@ -238,7 +238,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
             await paginator.start()
         else:
             await paginator.start(
-                content=f"Viewing {user_obj.name}'s {settings.plural_collectible_name}"
+                content=f"Looking at {user_obj.name}'s {settings.plural_collectible_name}..."
             )
 
     @app_commands.command()
@@ -271,7 +271,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
             except DoesNotExist:
                 await interaction.followup.send(
                     f"{user_obj.name} doesn't have any "
-                    f"{extra_text}{settings.plural_collectible_name} yet."
+                    f"{extra_text}{settings.plural_collectible_name} yet! They should play more!"
                 )
                 return
 
@@ -279,7 +279,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
             blocked = await player.is_blocked(interaction_player)
             if blocked and not is_staff(interaction):
                 await interaction.followup.send(
-                    "You cannot view the completion of a user that has blocked you.",
+                    "You cannot view the completion of a user that has blocked you!",
                     ephemeral=True,
                 )
                 return
@@ -302,7 +302,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
         if not bot_countryballs:
             await interaction.followup.send(
                 f"There are no {extra_text}{settings.plural_collectible_name}"
-                " registered on this bot yet.",
+                " registered on this bot yet!",
                 ephemeral=True,
             )
             return
@@ -352,15 +352,15 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
                 set(bot_countryballs[x] for x in owned_countryballs),
             )
         else:
-            entries.append((f"__**Owned {settings.plural_collectible_name}**__", "Nothing yet."))
+            entries.append((f"__**Owned {settings.plural_collectible_name}**__", "Nothing... yet!"))
 
         if missing := set(y for x, y in bot_countryballs.items() if x not in owned_countryballs):
             fill_fields(f"Missing {settings.plural_collectible_name}", missing)
         else:
             entries.append(
                 (
-                    f"__**:tada: No missing {settings.plural_collectible_name}, "
-                    "congratulations! :tada:**__",
+                    f"__**:tada: No missing icons, "
+                    "you are truly incredible! :tada:**__",
                     "\u200B",
                 )
             )  # force empty field value
@@ -424,7 +424,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
         except DoesNotExist:
             msg = f"{'You do' if user is None else f'{user_obj.display_name} does'}"
             await interaction.followup.send(
-                f"{msg} not have any {settings.plural_collectible_name} yet.",
+                f"{msg} not have any {settings.plural_collectible_name} yet!",
                 ephemeral=True,
             )
             return
@@ -438,7 +438,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
         if blocked and not is_staff(interaction):
             await interaction.followup.send(
                 f"You cannot view the last caught {settings.collectible_name} "
-                "of a user that has blocked you.",
+                "of a user that has blocked you!",
                 ephemeral=True,
             )
             return
@@ -447,7 +447,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
         if not countryball:
             msg = f"{'You do' if user is None else f'{user_obj.display_name} does'}"
             await interaction.followup.send(
-                f"{msg} not have any {settings.plural_collectible_name} yet.",
+                f"{msg} not have any {settings.plural_collectible_name} yet!",
                 ephemeral=True,
             )
             return
@@ -455,7 +455,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
         content, file = await countryball.prepare_for_message(interaction)
         if user is not None and user.id != interaction.user.id:
             content = (
-                f"You are viewing {user.display_name}'s last caught {settings.collectible_name}.\n"
+                f"Looking at {user.display_name}'s last caught icon...\n"
                 + content
             )
         await interaction.followup.send(content=content, file=file)
@@ -486,7 +486,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
 
         if settings.max_favorites == 0:
             await interaction.response.send_message(
-                f"You cannot set favorite {settings.plural_collectible_name} in this bot."
+                f"You cannot set favorite icons in this bot!"
             )
             return
 
@@ -499,7 +499,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
             )
             if await player.balls.filter(favorite=True).count() >= settings.max_favorites:
                 await interaction.response.send_message(
-                    f"You cannot set more than {settings.max_favorites} favorite {grammar}.",
+                    f"You cannot set more than {settings.max_favorites} favorite {grammar}!",
                     ephemeral=True,
                 )
                 return
@@ -509,7 +509,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
             emoji = self.bot.get_emoji(countryball.countryball.emoji_id) or ""
             await interaction.response.send_message(
                 f"{emoji} `#{countryball.pk:0X}` {countryball.countryball.country} "
-                f"is now a favorite {settings.collectible_name}!",
+                f"is now a favorite {settings.collectible_name}! :D",
                 ephemeral=True,
             )
 
@@ -519,7 +519,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
             emoji = self.bot.get_emoji(countryball.countryball.emoji_id) or ""
             await interaction.response.send_message(
                 f"{emoji} `#{countryball.pk:0X}` {countryball.countryball.country} "
-                f"isn't a favorite {settings.collectible_name} anymore.",
+                f"isn't a favorite {settings.collectible_name} anymore... D:",
                 ephemeral=True,
             )
 
@@ -550,23 +550,23 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
             return
         if not countryball.is_tradeable:
             await interaction.response.send_message(
-                f"You cannot donate this {settings.collectible_name}.", ephemeral=True
+                f"You can't donate this {settings.collectible_name}!", ephemeral=True
             )
             return
         if user.bot:
-            await interaction.response.send_message("You cannot donate to bots.", ephemeral=True)
+            await interaction.response.send_message("You can't donate to bots, silly!", ephemeral=True)
             return
         if await countryball.is_locked():
             await interaction.response.send_message(
-                f"This {settings.collectible_name} is currently locked for a trade. "
-                "Please try again later.",
+                f"This {settings.collectible_name} is currently locked for a trade! "
+                "Try again later!",
                 ephemeral=True,
             )
             return
         if countryball.favorite:
             view = ConfirmChoiceView(
                 interaction,
-                accept_message=f"{settings.collectible_name.title()} donated.",
+                accept_message=f"{settings.collectible_name.title()} donated!",
                 cancel_message="This request has been cancelled.",
             )
             await interaction.response.send_message(
@@ -587,13 +587,13 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
 
         if new_player == old_player:
             await interaction.followup.send(
-                f"You cannot give a {settings.collectible_name} to yourself.", ephemeral=True
+                f"You can't give an icon to yourself, silly!", ephemeral=True
             )
             await countryball.unlock()
             return
         if new_player.donation_policy == DonationPolicy.ALWAYS_DENY:
             await interaction.followup.send(
-                "This player does not accept donations. You can use trades instead.",
+                "This player does not accept donations! You can use trades instead.",
                 ephemeral=True,
             )
             await countryball.unlock()
@@ -603,7 +603,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
         if new_player.donation_policy == DonationPolicy.FRIENDS_ONLY:
             if not friendship:
                 await interaction.followup.send(
-                    "This player only accepts donations from friends, use trades instead.",
+                    "This player only accepts donations from friends! Use trades instead.",
                     ephemeral=True,
                 )
                 await countryball.unlock()
@@ -611,13 +611,13 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
         blocked = await new_player.is_blocked(old_player)
         if blocked:
             await interaction.followup.send(
-                "You cannot interact with a user that has blocked you.", ephemeral=True
+                "You cannot interact with a user that has blocked you!", ephemeral=True
             )
             await countryball.unlock()
             return
         if new_player.discord_id in self.bot.blacklist:
             await interaction.followup.send(
-                "You cannot donate to a blacklisted user.", ephemeral=True
+                "You cannot donate to a blacklisted user!", ephemeral=True
             )
             await countryball.unlock()
             return
@@ -625,7 +625,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
             await interaction.followup.send(
                 f"Hey {user.mention}, {interaction.user.name} wants to give you "
                 f"{countryball.description(include_emoji=True, bot=self.bot, is_trade=True)}!\n"
-                "Do you accept this donation?",
+                "Do you want it?",
                 view=DonationRequest(self.bot, interaction, countryball, new_player),
                 allowed_mentions=discord.AllowedMentions(users=new_player.can_be_mentioned),
             )
@@ -694,5 +694,5 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
         guild = f" caught in {interaction.guild.name}" if current_server else ""
         await interaction.followup.send(
             f"You have {balls} {special_str}{shiny_str}"
-            f"{country}{settings.collectible_name}{plural}{guild}."
+            f"{country}{settings.collectible_name}{plural}{guild}!"
         )

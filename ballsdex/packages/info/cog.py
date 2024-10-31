@@ -107,7 +107,7 @@ class Info(commands.Cog):
             owner = bot_info.owner
         owner_credits = "by the team" if bot_info.team else "by"
         dex_credits = (
-            f"This instance is owned {owner_credits} {owner}.\nAn instance of [Ballsdex]"
+            f"This instance is owned by benektelse.\nAn instance of [Ballsdex]"
             f"({settings.github_link}) by El Laggron and maintained by the Ballsdex Team "
             f"and community of [contributors]({settings.github_link}/graphs/contributors)."
         )
@@ -122,7 +122,7 @@ class Info(commands.Cog):
             f"{dex_credits}\n\n"
             "Consider supporting El Laggron on "
             "[Patreon](https://patreon.com/retke) :heart:\n\n"
-            f"[Discord server]({settings.discord_invite}) • [Invite me]({invite_link}) • "
+            f"[IconDex Official Server]({https://discord.com/invite/raw9zRJY2F}) • [Invite me]({invite_link}) • "
             f"[Source code and issues]({settings.github_link})\n"
             f"[Terms of Service]({settings.terms_of_service}) • "
             f"[Privacy policy]({settings.privacy_policy})"

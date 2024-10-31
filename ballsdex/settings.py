@@ -61,16 +61,16 @@ class Settings:
     bot_token: str = ""
     gateway_url: str | None = None
     shard_count: int | None = None
-    prefix: str = "b."
+    prefix: str = "icon."
 
-    collectible_name: str = "countryball"
-    plural_collectible_name: str = "countryballs"
-    bot_name: str = "BallsDex"
-    players_group_cog_name: str = "balls"
+    collectible_name: str = "icon"
+    plural_collectible_name: str = "icons"
+    bot_name: str = "IconDex"
+    players_group_cog_name: str = "icons"
 
-    max_favorites: int = 50
-    max_attack_bonus: int = 20
-    max_health_bonus: int = 20
+    max_favorites: int = 100
+    max_attack_bonus: int = 30
+    max_health_bonus: int = 30
 
     # /about
     about_description: str = ""

@@ -169,12 +169,12 @@ class Pages(discord.ui.View):
     async def on_error(
         self, interaction: discord.Interaction, error: Exception, item: discord.ui.Item
     ) -> None:
-        log.error("Error on pagination", exc_info=error)
+        log.error("Error on pagination!", exc_info=error)
         if interaction.response.is_done():
-            await interaction.followup.send("An unknown error occurred, sorry", ephemeral=True)
+            await interaction.followup.send("An unknown error occurred, sorry!", ephemeral=True)
         else:
             await interaction.response.send_message(
-                "An unknown error occurred, sorry", ephemeral=True
+                "An unknown error occurred, sorry!", ephemeral=True
             )
 
     async def start(self, *, content: Optional[str] = None, ephemeral: bool = False) -> None:
@@ -185,7 +185,7 @@ class Pages(discord.ui.View):
             ).embed_links
         ):
             await self.send(
-                "Bot does not have embed links permission in this channel.", ephemeral=True
+                "IconDex does not have embed links permission in this channel!", ephemeral=True
             )
             return
 
@@ -236,16 +236,16 @@ class Pages(discord.ui.View):
         timed_out = await modal.wait()
 
         if timed_out:
-            await interaction.followup.send("Took too long", ephemeral=True)
+            await interaction.followup.send("Took too long!", ephemeral=True)
             return
         elif self.is_finished():
-            await modal.interaction.response.send_message("Took too long", ephemeral=True)
+            await modal.interaction.response.send_message("Took too long!", ephemeral=True)
             return
 
         value = str(modal.page.value)
         if not value.isdigit():
             await modal.interaction.response.send_message(
-                f"Expected a number not {value!r}", ephemeral=True
+                f"Expected a number, not {value!r}!", ephemeral=True
             )
             return
 

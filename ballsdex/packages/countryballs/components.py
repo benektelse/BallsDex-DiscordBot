@@ -25,11 +25,11 @@ caught_balls = Counter(
 )
 
 
-class CountryballNamePrompt(Modal, title=f"Catch this {settings.collectible_name}!"):
+class CountryballNamePrompt(Modal, title=f"Catch this icon!"):
     name = TextInput(
-        label=f"Name of this {settings.collectible_name}",
+        label=f"Name of this icon",
         style=discord.TextStyle.short,
-        placeholder="Your guess",
+        placeholder="Guess!",
     )
 
     def __init__(self, ball: "CountryBall", button: CatchButton):
@@ -42,15 +42,15 @@ class CountryballNamePrompt(Modal, title=f"Catch this {settings.collectible_name
             config = await GuildConfig.get(guild_id=interaction.guild_id)
         except DoesNotExist:
             config = await GuildConfig.create(guild_id=interaction.guild_id, spawn_channel=None)
-        log.exception("An error occured in countryball catching prompt", exc_info=error)
+        log.exception("An error occured in icon catching prompt", exc_info=error)
         if interaction.response.is_done():
             await interaction.followup.send(
-                f"An error occured with this {settings.collectible_name}.",
+                f"An error occured with this {settings.collectible_name}!",
                 ephemeral=config.silent,
             )
         else:
             await interaction.response.send_message(
-                f"An error occured with this {settings.collectible_name}.",
+                f"An error occured with this {settings.collectible_name}!",
                 ephemeral=config.silent,
             )
 
@@ -63,10 +63,10 @@ class CountryballNamePrompt(Modal, title=f"Catch this {settings.collectible_name
             config = await GuildConfig.get(guild_id=interaction.guild_id)
         except DoesNotExist:
             config = await GuildConfig.create(guild_id=interaction.guild_id, spawn_channel=None)
-
+        
         if self.ball.catched:
-            await interaction.followup.send(
-                f"{interaction.user.mention} I was caught already!",
+            slowlist = [f"{interaction.user.mention}, you were too silly and slow!", f"{interaction.user.mention}, did you REALLY think you could catch that?", f"{interaction.user.mention}, I admire your confidence for trying.", f"Come on, {interaction.user.mention}! Keep trying! Maybe you'll outspeed Lamia one day.", f"{interaction.user.mention}, please try a little bit harder next time.", f"Hey {interaction.user.mention}, you gotta work on your typing speed.", f"{interaction.user.mention}, remember... THEORETICALLY, you could outspeed anyone... just not today.", f"{interaction.user.mention}, did you really try to get that one? It feels like you're antagonizing me.", f"{interaction.user.mention}, are you slow on purpose?", f"{interaction.user.mention}, I'm not meaning to put you in a bad mood. It's not my fault that you're a slow typer.", f"{interaction.user.mention}, you have no idea how much your slowness hurts me."]
+            await interaction.followup.send((random.choice(slowlist))
                 ephemeral=config.silent,
                 allowed_mentions=discord.AllowedMentions(users=player.can_be_mentioned),
             )
@@ -87,25 +87,25 @@ class CountryballNamePrompt(Modal, title=f"Catch this {settings.collectible_name
 
             special = ""
             if ball.shiny:
-                special += f"✨ ***It's a shiny {settings.collectible_name}!*** ✨\n"
+                special += f"✨ ***Is this icon glowing...?*** ✨\n"
             if ball.specialcard and ball.specialcard.catch_phrase:
                 special += f"*{ball.specialcard.catch_phrase}*\n"
             if has_caught_before:
                 special += (
-                    f"This is a **new {settings.collectible_name}** "
-                    "that has been added to your completion!"
+                    f"Woah... is that a **new {settings.collectible_name}** "
+                    "you've just caught?!"
                 )
-            await interaction.followup.send(
-                f"{interaction.user.mention} You caught **{self.ball.name}!** "
-                f"`(#{ball.pk:0X}, {ball.attack_bonus:+}%/{ball.health_bonus:+}%)`\n\n"
-                f"{special}",
+            fakeoutlist = ["Henral", "Hotball1", "Trick", "Biprex", "KPGDylan", "Seels", "adafcaefc", "Zylenox", "Zoink", "Doggie", "heda", "Paqoe", "zNymo98", "SerVax", "Thycket", "Slithium", "Nocturina", "Wolvez", "Viprin", "Zeroxy", "rWooshi", "StormBlazer", "nsla", "MrSpaghetti", "Thnnder", "Tigger4046", "BigMukMuk", "Swiborg", "SpaceUK", "saRy", "Hyperbola", "SpirteX", "WarGack", "sinc0s", "Phynn24", "mosk14142", "iIiViRuZiIi", "AleXPain24", "Qwer", "Absolute", "Varium", "Vertic", "Quasar", "Cvolton", "3xotic", "Surv", "hmann", "DarkX", "KrmaL", "LunarSIMG", "BrandonLarkin", "Zobros", "nSwish", "Sandstorm", "Riot", "Pasiblitz", "Michigun", "Robtop", "Anaban"]
+            actionlist = ["spying on " f"**{random.choice(fakeoutlist)}**", "cooking dinner", "working out", "doing yoga", "working overtime", "playing IconDex", "sleeping", "in class", "making a video", "jumping over spikes", "playing a level", "arguing with " f"**{random.choice(fakeoutlist)}**", "having a pillow fight with " f"**{random.choice(fakeoutlist)}**", "running errands with " f"**{random.choice(fakeoutlist)}**", "hanging out with " f"**{random.choice(fakeoutlist)}**", "making a level", "grinding stars", "grinding moons", "grinding demons", "being tutored by " f"**{random.choice(fakeoutlist)}**", "partying with " f"**{random.choice(fakeoutlist)}**", "listening to music", "relaxing", "competing against " f"**{random.choice(fakeoutlist)}**", "on a picnic with " f"**{random.choice(fakeoutlist)}**", "on the beach with " f"**{random.choice(fakeoutlist)}**"]
+            catchmsglist = ["{ping} just caught **{icon}** off guard while they were {iconaction}." f"\n`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "{ping} just caught **{icon}** off guard while they were {iconaction}." f"\n`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "{ping} just caught **{icon}** off guard while they were {iconaction}." f"\n`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "{ping} just caught **{icon}** off guard while they were {iconaction}." f"\n`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "{ping} just caught **{icon}** off guard while they were {iconaction}." f"\n`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "{ping} received **{icon}** " f"`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)` " "as a reward for winning a competition against " f"**{random.choice(fakeoutlist)}**!" "\n\n {icondexspecial}", "{ping} started a cult revolving around **{icon}...** " f"\n`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "And now, in the possession of {ping}... with an attack multiplier of " f"`{ball.attack_bonus:+}%` " "and a health multiplier of " f"`{ball.health_bonus:+}%`, " "everyone please welcome **{icon}** to their collection!" f"\n`(#{ball.pk:0X})`" "\n\n {icondexspecial}", "{ping}, have you considered that this **{icon}** you just caught might be silly? " f"\n`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "{ping} didn't ACTUALLY catch **{icon}.** I'm only sending this so that they don't feel bad. \n" f"`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "Nice, {ping}! You just caught **{icon}!** \n" f"`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "{ping} {ping} {ping} hey {ping} dude look {ping} {ping} you got **{icon}!!!**" f"\n`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "Hey {ping}, make sure to hide your **{icon}** before Lamia can steal it!" f"\n`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "Nice, {ping}! You just caught " f"**{random.choice(fakeoutlist)}!** " "\n ...just kidding, you actually caught **{icon}.**" f"\n`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "**{icon}** has happily joined {ping}'s collection!" f"\n`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "Hey, {ping}! This **{icon}** is pretty awesome. " f"\n`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "Hey, {ping}! That **{icon}** looks really good in your collection! You should start collecting them!" f"\n`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "Hey, {ping}. That **{icon}** doesn't have a permit to be silly, just so you know." f"\n`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "{ping}, you should give me that **{icon}.** I need it more than you do." f"\n`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}"]
+            await interaction.followup.send(random.choice(catchmsglist).format(ping = interaction.user.mention, icon = self.ball.name, icondexspecial = special, iconaction = random.choice(actionlist))
                 allowed_mentions=discord.AllowedMentions(users=player.can_be_mentioned),
             )
             self.button.disabled = True
             await interaction.followup.edit_message(self.ball.message.id, view=self.button.view)
         else:
-            await interaction.followup.send(
-                f"{interaction.user.mention} Wrong name!",
+            wrongmsglist = [f"{interaction.user.mention}, care to explain what a “{self.name}” is?", f"{interaction.user.mention} just said “{self.name}.” Point and laugh.", f"{interaction.user.mention}, that's not how you spell **{self.ball.name}.**", f"I pray that {interaction.user.mention} doesn't have any hopes of becoming a stenographer...", f"{interaction.user.mention}, slamming your keyboard won't help.", f"What's wrong, {interaction.user.mention}? Don't know this one?", f"{interaction.user.mention}, I can't tell if you need to use comp or you're just REALLY bad at typing.", f"Was that a typo, {interaction.user.mention}?", f"{interaction.user.mention}, how do you NOT know what this icon's name is?", f"Fine, {interaction.user.mention}, it's **{self.ball.name}.** Please stop wasting my time.", f"{interaction.user.mention}... how did you manage to type THAT poorly?", f"{interaction.user.mention}. Please. Type properly. For the love of god.", f"{interaction.user.mention}, I request of you to write this icon's name correctly next time. Don't dissapoint me.", f"{interaction.user.mention}, I know a lot about you. For example: You just typed “{self.name}...” whatever THAT means."]
+            await interaction.followup.send(random.choice(wrongmsglist)
                 allowed_mentions=discord.AllowedMentions(users=player.can_be_mentioned),
                 ephemeral=config.silent,
             )
@@ -166,15 +166,15 @@ class CountryballNamePrompt(Modal, title=f"Catch this {settings.collectible_name
             ).inc()
         return ball, is_new
 
-
+btnlst = ["Catch?", "Catch!", "Catch...", "Catch, you silly!", "Catch this icon?", "Will you catch this?", "Catching this icon...", "Catch it before it despawns!!!", "Please catch this...", "What if... you caught this?", "Acquire... the icon.", "This is a button!", "This is an icon!", "Are you cool? Catch this!", "I wonder how many icons you've caught...", "The catcher.", "You're silly.", "✅", "🔥", "Seize the icon...", "You gon' take it?", "Hauling in this icon...", "Someone's gonna snipe this.", "Don't copy and paste on me!", "ARREST THIS ICON! IT'S BEING SILLY WITHOUT A PERMIT!", "CEASE THE SEIZE!", "Apprehend him!", "This icon deserves to be caught.", "This is my favorite icon.", "For real!"]
 class CatchButton(Button):
     def __init__(self, ball: "CountryBall"):
-        super().__init__(style=discord.ButtonStyle.primary, label="Catch me!")
+        super().__init__(style=discord.ButtonStyle.primary, label=(random.choice(btnlst)))
         self.ball = ball
 
     async def callback(self, interaction: discord.Interaction):
         if self.ball.catched:
-            await interaction.response.send_message("I was caught already!", ephemeral=True)
+            await interaction.response.send_message("Too slow, silly!", ephemeral=True)
         else:
             await interaction.response.send_modal(CountryballNamePrompt(self.ball, self))
 
