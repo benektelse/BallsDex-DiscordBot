@@ -50,7 +50,7 @@ def draw_card(ball_instance: "BallInstance"):
 
     draw = ImageDraw.Draw(image)
     draw.text((50, 90), ball.short_name or ball.country, font=title_font, stroke_width=6, stroke_fill=(0, 0, 0, 255))
-    for i, line in enumerate(textwrap.wrap(f"Ability: {ball.capacity_name}", width=23)):
+    for i, line in enumerate(textwrap.wrap(f"Ability: {ball.capacity_name}", width=26)):
         draw.text(
             (70, 1070 + 75 * i),
             line,
@@ -59,7 +59,7 @@ def draw_card(ball_instance: "BallInstance"):
             stroke_width=3,
             stroke_fill=(0, 0, 0, 255),
         )
-    for i, line in enumerate(textwrap.wrap(ball.capacity_description, width=38)):
+    for i, line in enumerate(textwrap.wrap(ball.capacity_description, width=42)):
         draw.text(
             (60, 1370 + 50 * i),
             line,
@@ -163,7 +163,7 @@ def draw_card(ball_instance: "BallInstance"):
             stroke_width=3,
             stroke_fill=(0, 0, 0, 255),
         )
-    for i, line in enumerate(textwrap.wrap(f"Ability: {ball.capacity_name}", width=26)):
+    for i, line in enumerate(textwrap.wrap(f"Ability: {ball.capacity_name}", width=30)):
         draw.text(
             (1750, 200 + 75 * i),
             line,
@@ -172,7 +172,7 @@ def draw_card(ball_instance: "BallInstance"):
             stroke_width=3,
             stroke_fill=(0, 0, 0, 255),
         )
-    for i, line in enumerate(textwrap.wrap(ball.capacity_description, width=40)):
+    for i, line in enumerate(textwrap.wrap(ball.capacity_description, width=48)):
         draw.text(
             (1750, 400 + 50 * i),
             line,

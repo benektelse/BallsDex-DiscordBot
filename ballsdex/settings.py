@@ -131,9 +131,9 @@ def read_settings(path: "Path"):
     settings.prometheus_host = content["prometheus"]["host"]
     settings.prometheus_port = content["prometheus"]["port"]
 
-    settings.max_favorites = content.get("max-favorites", 50)
-    settings.max_attack_bonus = content.get("max-attack-bonus", 20)
-    settings.max_health_bonus = content.get("max-health-bonus", 20)
+    settings.max_favorites = content.get("max-favorites", 100)
+    settings.max_attack_bonus = content.get("max-attack-bonus", 30)
+    settings.max_health_bonus = content.get("max-health-bonus", 30)
     log.info("Settings loaded.")
 
 
