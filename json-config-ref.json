@@ -12,7 +12,7 @@
         "players-group-cog-name",
         "admin-command",
         "prometheus",
-        "owners",
+        "owners"
     ],
     "properties": {
         "discord-token": {
@@ -68,6 +68,11 @@
             "default": 50,
             "description": "Maximum number of favorite countryballs allowed per player",
             "minimum": 0
+        },
+        "favorited-collectible-emoji": {
+            "type": "string",
+            "default": "❤️",
+            "description": "The emoji used to represent a favorited countryball"
         },
         "max-attack-bonus": {
             "type": "integer",

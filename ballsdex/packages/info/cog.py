@@ -1,6 +1,7 @@
 import logging
 import random
 import sys
+from datetime import datetime
 from typing import TYPE_CHECKING
 
 import discord
@@ -15,8 +16,11 @@ from discord.ext import commands
 from ballsdex import __version__ as ballsdex_version
 from ballsdex.core.models import Ball
 from ballsdex.core.models import balls as countryballs
+from ballsdex.core.utils.formatting import pagify
 from ballsdex.core.utils.tortoise import row_count_estimate
 from ballsdex.settings import settings
+
+from .license import LicenseInfo
 
 if TYPE_CHECKING:
     from ballsdex.core.bot import BallsDexBot
@@ -73,6 +77,13 @@ class Info(commands.Cog):
         players_count = await row_count_estimate("player")
         balls_instances_count = await row_count_estimate("ballinstance")
 
+        days, hours, minutes, seconds = 0, 0, 0, 0
+        if self.bot.startup_time is not None:
+            uptime_duration = datetime.now() - self.bot.startup_time
+            days, remainder = divmod(int(uptime_duration.total_seconds()), 86400)
+            hours, remainder = divmod(remainder, 3600)
+            minutes, seconds = divmod(remainder, 60)
+
         assert self.bot.user
         assert self.bot.application
         try:
@@ -98,17 +109,32 @@ class Info(commands.Cog):
                 permissions=self.bot.application.install_params.permissions,
                 scopes=self.bot.application.install_params.scopes,
             )
+
+        bot_info = await self.bot.application_info()
+        if bot_info.team:
+            owner = bot_info.team.name
+        else:
+            owner = bot_info.owner
+        owner_credits = "by the team" if bot_info.team else "by"
+        dex_credits = (
+            f"This instance is owned {owner_credits} {owner}.\nAn instance of [Ballsdex]"
+            f"({settings.github_link}) by El Laggron and maintained by the Ballsdex Team "
+            f"and community of [contributors]({settings.github_link}/graphs/contributors)."
+        )
         embed.description = (
             f"{' '.join(str(x) for x in balls)}\n"
             f"{settings.about_description}\n"
-            f"*Running version **[{ballsdex_version}]({settings.github_link}/releases)***\n\n"
-            f"**{balls_count:,}** {settings.collectible_name}s to collect!\n"
-            f"**{players_count:,}** players! They caught "
-            f"**{balls_instances_count:,}** {settings.collectible_name}s!\n"
-            f"**{len(self.bot.guilds):,}** servers currently playing\n\n"
-            "This bot is owned by **benektelse!** The bot was created by "
-            "**El Laggron!** Consider supporting El Laggron on his [Patreon!](https://patreon.com/retke) \n\n"
-            f"[IconDex Official Server](https://discord.com/invite/raw9zRJY2F) • [Invite me]({invite_link}) • "
+            f"*Running version **[{ballsdex_version}]({settings.github_link}/releases)***\n"
+            f"The bot has been online for **{days} days, {hours} hours, {minutes} minutes, "
+            f"and {seconds} seconds.**\n\n"
+            f"**{balls_count:,}** {settings.plural_collectible_name} to collect\n"
+            f"**{players_count:,}** players that caught "
+            f"**{balls_instances_count:,}** {settings.plural_collectible_name}\n"
+            f"**{len(self.bot.guilds):,}** servers playing\n\n"
+            f"{dex_credits}\n\n"
+            "Consider supporting El Laggron on "
+            "[Patreon](https://patreon.com/retke) :heart:\n\n"
+            f"[Discord server]({settings.discord_invite}) • [Invite me]({invite_link}) • "
             f"[Source code and issues]({settings.github_link})\n"
             f"[Terms of Service]({settings.terms_of_service}) • "
             f"[Privacy policy]({settings.privacy_policy})"
@@ -120,7 +146,7 @@ class Info(commands.Cog):
             text=f"Python {v.major}.{v.minor}.{v.micro} • discord.py {discord.__version__}"
         )
 
-        await interaction.response.send_message(embed=embed)
+        await interaction.response.send_message(embed=embed, view=LicenseInfo())
 
     @app_commands.command()
     async def help(self, interaction: discord.Interaction):
@@ -146,6 +172,10 @@ class Info(commands.Cog):
                 content += f"{mention_app_command(app_command)}: {translated}\n"
             if not content:
                 continue
-            embed.add_field(name=cog.qualified_name, value=content, inline=False)
+            pages = pagify(content, page_length=1024)
+            for i, page in enumerate(pages):
+                embed.add_field(
+                    name=cog.qualified_name if i == 0 else "\u200b", value=page, inline=False
+                )
 
         await interaction.response.send_message(embed=embed)
