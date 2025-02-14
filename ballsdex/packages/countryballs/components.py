@@ -190,7 +190,8 @@ class CatchView(View):
                 await self.ball.message.edit(view=self)
             except discord.HTTPException:
                 pass
-btnlst = ["Catch?", "Catch!", "Catch...", "Catch, you silly!", "Catch this icon?", "Will you catch this?", "Catching this icon...", "Catch it before it despawns!!!", "Please catch this...", "What if... you caught this?", "Acquire... the icon.", "This is a button!", "This is an icon!", "Are you cool? Catch this!", "I wonder how many icons you've caught...", "The catcher.", "You're silly.", "✅", "🔥", "Seize the icon...", "You gon' take it?", "Hauling in this icon...", "Someone's gonna snipe this.", "Don't copy and paste on me!", "ARREST THIS ICON!", "CEASE THE SEIZE!", "Apprehend him!", "This icon deserves to be caught.", "This is my favorite icon.", "For real!", "Are you a cop?", "I accept all Terms & Conditions."]
+    
+    btnlst = ["Catch?", "Catch!", "Catch...", "Catch, you silly!", "Catch this icon?", "Will you catch this?", "Catching this icon...", "Catch it before it despawns!!!", "Please catch this...", "What if... you caught this?", "Acquire... the icon.", "This is a button!", "This is an icon!", "Are you cool? Catch this!", "I wonder how many icons you've caught...", "The catcher.", "You're silly.", "✅", "🔥", "Seize the icon...", "You gon' take it?", "Hauling in this icon...", "Someone's gonna snipe this.", "Don't copy and paste on me!", "ARREST THIS ICON!", "CEASE THE SEIZE!", "Apprehend him!", "This icon deserves to be caught.", "This is my favorite icon.", "For real!", "Are you a cop?", "I accept all Terms & Conditions."]
     @button(style=discord.ButtonStyle.primary, label=(random.choice(btnlst)))
     async def catch_button(self, interaction: discord.Interaction["BallsDexBot"], button: Button):
         if self.ball.caught:
