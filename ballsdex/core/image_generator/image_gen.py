@@ -210,7 +210,7 @@ def draw_card(ball_instance: "BallInstance", media_path: str = "./admin_panel/me
         stroke_width=3,
         stroke_fill=(0, 0, 0, 255),
     )
-        draw.text(
+    draw.text(
         (30, 1927),
         str("ID {}").format(hex(ball_instance.pk).upper()[2:]),
         font=credits_font,
