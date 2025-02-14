@@ -102,7 +102,7 @@ def draw_card(ball_instance: "BallInstance", media_path: str = "./admin_panel/me
         credits_color = get_credit_color(
             image, (0, int(image.height * 0.8), image.width, image.height)
         )
-        if ball_instance.health_bonus >= 0:
+    if ball_instance.health_bonus >= 0:
         draw.text(
             (320, 1795),
             str("(+{}%)").format(ball_instance.health_bonus),
@@ -135,13 +135,13 @@ def draw_card(ball_instance: "BallInstance", media_path: str = "./admin_panel/me
             stroke_width=3,
             stroke_fill=(0, 0, 0, 255),
             anchor="ra",
-        )
-        draw.text(
-        (2470, 30),
-        str(ball_instance.health),
-        font=stats_font,
-        stroke_width=3,
-        stroke_fill=(0, 0, 0, 255),
+    )
+    draw.text(
+    (2470, 30),
+    str(ball_instance.health),
+    font=stats_font,
+    stroke_width=3,
+    stroke_fill=(0, 0, 0, 255),
     )
     draw.text(
         (1820, 30),
