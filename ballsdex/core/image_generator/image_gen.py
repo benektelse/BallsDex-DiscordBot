@@ -56,15 +56,15 @@ def draw_card(ball_instance: "BallInstance", media_path: str = "./admin_panel/me
 
     draw = ImageDraw.Draw(image)
     draw.text(
-        (50, 20),
+        (50, 90),
         ball.short_name or ball.country,
         font=title_font,
-        stroke_width=2,
+        stroke_width=5,
         stroke_fill=(0, 0, 0, 255),
     )
     for i, line in enumerate(textwrap.wrap(f"Ability: {ball.capacity_name}", width=26)):
         draw.text(
-            (100, 1050 + 100 * i),
+            (70, 1070 + 75 * i),
             line,
             font=capacity_name_font,
             fill=(2555, 255, 255, 255),
@@ -73,14 +73,14 @@ def draw_card(ball_instance: "BallInstance", media_path: str = "./admin_panel/me
         )
     for i, line in enumerate(textwrap.wrap(ball.capacity_description, width=42)):
         draw.text(
-            (60, 1300 + 80 * i),
+            (60, 1370 + 50 * i),
             line,
             font=capacity_description_font,
             stroke_width=3,
             stroke_fill=(0, 0, 0, 255),
         )
     draw.text(
-        (320, 1670),
+        (320, 1725),
         str(ball_instance.health),
         font=stats_font,
         fill=ball_health,
@@ -88,7 +88,7 @@ def draw_card(ball_instance: "BallInstance", media_path: str = "./admin_panel/me
         stroke_fill=(0, 0, 0, 255),
     )
     draw.text(
-        (1120, 1670),
+        (1120, 1725),
         str(ball_instance.attack),
         font=stats_font,
         fill=(255, 255, 255, 255),
@@ -207,14 +207,14 @@ def draw_card(ball_instance: "BallInstance", media_path: str = "./admin_panel/me
         "Created by El Laggron\n" f"Artwork author: {ball_credits}",
         font=credits_font,
         fill=credits_color,
-        stroke_width=3,
+        stroke_width=0,
         stroke_fill=(0, 0, 0, 255),
     )
     draw.text(
         (30, 1927),
         str("ID {}").format(hex(ball_instance.pk).upper()[2:]),
         font=credits_font,
-        fill=(0, 0, 0, 255),
+        fill=credits_color,
         stroke_width=0,
         stroke_fill=(255, 255, 255, 255),
     )
@@ -223,7 +223,7 @@ def draw_card(ball_instance: "BallInstance", media_path: str = "./admin_panel/me
         (30, 1956),
         str("Catch Date: {}".format(ball_instance.catch_date)[:22]),
         font=credits_font,
-        fill=(0, 0, 0, 255),
+        fill=credits_color,
         stroke_width=0,
         stroke_fill=(255, 255, 255, 255),
     )
@@ -231,7 +231,7 @@ def draw_card(ball_instance: "BallInstance", media_path: str = "./admin_panel/me
         (550, 1956),
         str("(Time: {} UTC)".format(tmfcg)),
         font=credits_font,
-        fill=(0, 0, 0, 255),
+        fill=credits_color,
         stroke_width=0,
         stroke_fill=(255, 255, 255, 255),
     )
@@ -239,7 +239,7 @@ def draw_card(ball_instance: "BallInstance", media_path: str = "./admin_panel/me
         (1700, 900),
         "Created by El Laggron\n" f"Artwork author: {ball.credits}",
         font=credits_font,
-        fill=(0, 0, 0, 255),
+        fill=credits_color,
         stroke_width=0,
         stroke_fill=(255, 255, 255, 255),
     )
@@ -247,7 +247,7 @@ def draw_card(ball_instance: "BallInstance", media_path: str = "./admin_panel/me
         (1700, 957),
         str("ID {}").format(hex(ball_instance.pk).upper()[2:]),
         font=credits_font,
-        fill=(0, 0, 0, 255),
+        fill=credits_color,
         stroke_width=0,
         stroke_fill=(255, 255, 255, 255),
     )
@@ -255,7 +255,7 @@ def draw_card(ball_instance: "BallInstance", media_path: str = "./admin_panel/me
         (1700, 986),
         str("Catch Date: {}".format(ball_instance.catch_date)[:22]),
         font=credits_font,
-        fill=(0, 0, 0, 255),
+        fill=credits_color,
         stroke_width=0,
         stroke_fill=(255, 255, 255, 255),
     )
@@ -263,7 +263,7 @@ def draw_card(ball_instance: "BallInstance", media_path: str = "./admin_panel/me
         (2220, 986),
         str("(Time: {} UTC)".format(tmfcg)),
         font=credits_font,
-        fill=(0, 0, 0, 255),
+        fill=credits_color,
         stroke_width=0,
         stroke_fill=(255, 255, 255, 255),
     )

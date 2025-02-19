@@ -75,10 +75,10 @@ class Settings:
     shard_count: int | None = None
     prefix: str = "b."
 
-    collectible_name: str = "countryball"
-    plural_collectible_name: str = "countryballs"
-    bot_name: str = "BallsDex"
-    players_group_cog_name: str = "balls"
+    collectible_name: str = "icon"
+    plural_collectible_name: str = "icons"
+    bot_name: str = "IconDex"
+    players_group_cog_name: str = "icons"
     favorited_collectible_emoji: str = "❤️"
 
     max_favorites: int = 50

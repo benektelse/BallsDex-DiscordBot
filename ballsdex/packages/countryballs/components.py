@@ -35,7 +35,7 @@ class CountryballNamePrompt(Modal, title=f"Catch this {settings.collectible_name
         self.button = button
 
     async def on_error(self, interaction: discord.Interaction, error: Exception, /) -> None:
-        log.exception("An error occured in countryball catching prompt", exc_info=error)
+        log.exception("An error occured in icon catching prompt", exc_info=error)
         if interaction.response.is_done():
             await interaction.followup.send(
                 f"An error occured with this {settings.collectible_name}.",
@@ -98,17 +98,17 @@ class CountryballNamePrompt(Modal, title=f"Catch this {settings.collectible_name
             if f"{self.name}".lower() in sadnesslist:
                 await interaction.followup.send(random.choice(sadwrongmsglist),
                     allowed_mentions=discord.AllowedMentions(users=player.can_be_mentioned),
-                    ephemeral=config.silent,
+                    ephemeral=False,
                 )
             elif f"{self.name}".lower() in pooplist:
                 await interaction.followup.send(random.choice(poopwrongmsglist),
                     allowed_mentions=discord.AllowedMentions(users=player.can_be_mentioned),
-                    ephemeral=config.silent,
+                    ephemeral=False,
                 )
             else:
                 await interaction.followup.send(random.choice(wrongmsglist),
                     allowed_mentions=discord.AllowedMentions(users=player.can_be_mentioned),
-                    ephemeral=config.silent,
+                    ephemeral=False,
                 )
 
     async def catch_ball(
@@ -191,8 +191,7 @@ class CatchView(View):
             except discord.HTTPException:
                 pass
     
-    btnlst = ["Catch?", "Catch!", "Catch...", "Catch, you silly!", "Catch this icon?", "Will you catch this?", "Catching this icon...", "Catch it before it despawns!!!", "Please catch this...", "What if... you caught this?", "Acquire... the icon.", "This is a button!", "This is an icon!", "Are you cool? Catch this!", "I wonder how many icons you've caught...", "The catcher.", "You're silly.", "✅", "🔥", "Seize the icon...", "You gon' take it?", "Hauling in this icon...", "Someone's gonna snipe this.", "Don't copy and paste on me!", "ARREST THIS ICON!", "CEASE THE SEIZE!", "Apprehend him!", "This icon deserves to be caught.", "This is my favorite icon.", "For real!", "Are you a cop?", "I accept all Terms & Conditions."]
-    @button(style=discord.ButtonStyle.primary, label=(random.choice(btnlst)))
+    @button(style=discord.ButtonStyle.primary, label=("Catch me!"))
     async def catch_button(self, interaction: discord.Interaction["BallsDexBot"], button: Button):
         if self.ball.caught:
             await interaction.response.send_message("Too slow, silly!", ephemeral=True)
