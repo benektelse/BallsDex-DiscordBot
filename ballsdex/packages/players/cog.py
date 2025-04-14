@@ -107,7 +107,7 @@ class Player(commands.GroupCog):
         if policy.value == DonationPolicy.ALWAYS_ACCEPT:
             await interaction.response.send_message(
                 "Setting updated, you will now receive all donated "
-                f"{settings.plural_collectible_name} immediately.",
+                f"icons immediately.",
                 ephemeral=True,
             )
         elif policy.value == DonationPolicy.REQUEST_APPROVAL:
@@ -125,7 +125,7 @@ class Player(commands.GroupCog):
         elif policy.value == DonationPolicy.FRIENDS_ONLY:
             await interaction.response.send_message(
                 "Setting updated, you will now only receive donated "
-                f"{settings.plural_collectible_name} from players you have "
+                f"icons from players you have "
                 "added as friends in the bot.",
                 ephemeral=True,
             )
@@ -587,7 +587,7 @@ class Player(commands.GroupCog):
         files = []
         if type == "balls":
             data = await get_items_csv(player)
-            filename = f"{interaction.user.id}_{settings.collectible_name}.csv"
+            filename = f"{interaction.user.id}_icon.csv"
             data.filename = filename  # type: ignore
             files.append(data)
         elif type == "trades":
@@ -598,7 +598,7 @@ class Player(commands.GroupCog):
         elif type == "all":
             balls = await get_items_csv(player)
             trades = await get_trades_csv(player)
-            balls_filename = f"{interaction.user.id}_{settings.collectible_name}.csv"
+            balls_filename = f"{interaction.user.id}_icon.csv"
             trades_filename = f"{interaction.user.id}_trades.csv"
             balls.filename = balls_filename  # type: ignore
             trades.filename = trades_filename  # type: ignore
@@ -641,7 +641,7 @@ async def get_items_csv(player: PlayerModel) -> BytesIO:
         "ball", "trade_player", "special"
     )
     txt = (
-        f"id,hex id,{settings.collectible_name},catch date,trade_player"
+        f"id,hex id,icon,catch date,trade_player"
         ",special,attack,attack bonus,hp,hp_bonus\n"
     )
     for ball in balls:

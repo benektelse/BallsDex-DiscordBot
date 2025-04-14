@@ -182,7 +182,7 @@ class Trade(commands.GroupCog):
             return
         if not countryball.is_tradeable:
             await interaction.response.send_message(
-                f"You can't trade this {settings.collectible_name}!", ephemeral=True
+                f"You can't trade this icon!", ephemeral=True
             )
             return
         await interaction.response.defer(ephemeral=True, thinking=True)
@@ -193,7 +193,7 @@ class Trade(commands.GroupCog):
                 cancel_message="This request has been cancelled!",
             )
             await interaction.followup.send(
-                f"This {settings.collectible_name} is a favorite, "
+                f"This icon is a favorite, "
                 "are you sure you want to trade it?",
                 view=view,
                 ephemeral=True,
@@ -215,13 +215,13 @@ class Trade(commands.GroupCog):
             return
         if countryball in trader.proposal:
             await interaction.followup.send(
-                f"You already have this {settings.collectible_name} in your proposal!",
+                f"You already have this icon in your proposal!",
                 ephemeral=True,
             )
             return
         if await countryball.is_locked():
             await interaction.followup.send(
-                f"This {settings.collectible_name} is currently in an active trade or donation, "
+                f"This icon is currently in an active trade or donation, "
                 "please try again later!",
                 ephemeral=True,
             )
@@ -275,14 +275,14 @@ class Trade(commands.GroupCog):
         balls = await query
         if not balls:
             await interaction.followup.send(
-                f"No {settings.plural_collectible_name} found.", ephemeral=True
+                f"No icons found.", ephemeral=True
             )
             return
         balls = [x for x in balls if x.is_tradeable]
 
         view = BulkAddView(interaction, balls, self)  # type: ignore
         await view.start(
-            content=f"Select the {settings.plural_collectible_name} you want to add "
+            content=f"Select the icons you want to add "
             "to your proposal! Note that the display will wipe on pagination. However, "
             f"the selected icons will remain!"
         )
@@ -322,7 +322,7 @@ class Trade(commands.GroupCog):
             return
         if countryball not in trader.proposal:
             await interaction.response.send_message(
-                f"That {settings.collectible_name} is not in your proposal!", ephemeral=True
+                f"That icon is not in your proposal!", ephemeral=True
             )
             return
         trader.proposal.remove(countryball)

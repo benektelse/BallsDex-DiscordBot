@@ -71,7 +71,25 @@ class Core(commands.Cog):
         This is needed each time the database is updated, otherwise changes won't reflect until
         next start.
         """
+        
         await self.bot.load_cache()
+        from ballsdex.core.models import balls, specials
+        from datetime import datetime
+        from tortoise.timezone import now as datetime_now
+
+        enabled_balls = {x: y for x, y in balls.items() if y.enabled}
+    
+        # Count spawnable specials (within their date range)
+        spawnable_specials = {
+            x: y for x, y in specials.items() 
+            if (y.start_date is None or y.start_date <= datetime_now()) 
+            and (y.end_date is None or y.end_date >= datetime_now())
+        }
+    
+        total_specials = len(spawnable_specials)
+        total_enabled_balls = len(enabled_balls)
+
+        log.info(f"Reloaded cache. Total enabled balls: {total_enabled_balls}, Total spawnable specials: {total_specials}")
         await ctx.message.add_reaction("🔥")
 
     @commands.command()

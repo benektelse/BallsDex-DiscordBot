@@ -1,5 +1,6 @@
 import enum
 import logging
+from tortoise.functions import Count
 from typing import TYPE_CHECKING
 
 import discord
@@ -9,7 +10,7 @@ from discord.ui import Button, View, button
 from tortoise.exceptions import DoesNotExist
 from tortoise.functions import Count
 
-from ballsdex.core.models import BallInstance, DonationPolicy, Player, Trade, TradeObject, balls
+from ballsdex.core.models import BallInstance, DonationPolicy, Player, Trade, TradeObject, balls, specials, Ball, Special
 from ballsdex.core.utils.buttons import ConfirmChoiceView
 from ballsdex.core.utils.paginator import FieldPageSource, Pages
 from ballsdex.core.utils.sorting import SortingChoices, sort_balls
@@ -148,11 +149,11 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
         except DoesNotExist:
             if user_obj == interaction.user:
                 await interaction.followup.send(
-                    f"You don't have any {settings.plural_collectible_name} yet!"
+                    f"You don't have any icons yet!"
                 )
             else:
                 await interaction.followup.send(
-                    f"{user_obj.name} doesn't have any {settings.plural_collectible_name} yet!"
+                    f"{user_obj.name} doesn't have any icons yet!"
                 )
             return
         if user is not None:
@@ -194,12 +195,12 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
 
             if user_obj == interaction.user:
                 await interaction.followup.send(
-                    f"You don't have any {combined} {settings.plural_collectible_name} yet!"
+                    f"You don't have any {combined} icons yet!"
                 )
             else:
                 await interaction.followup.send(
                     f"{user_obj.name} doesn't have any {combined} "
-                    f"{settings.plural_collectible_name} yet!"
+                    f"icons yet!"
                 )
             return
         if reverse:
@@ -210,7 +211,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
             await paginator.start()
         else:
             await paginator.start(
-                content=f"Viewing {user_obj.name}'s {settings.plural_collectible_name}..."
+                content=f"Viewing {user_obj.name}'s icons..."
             )
 
     @app_commands.command()
@@ -240,7 +241,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
             except DoesNotExist:
                 await interaction.followup.send(
                     f"{user_obj.name} doesn't have any "
-                    f"{extra_text}{settings.plural_collectible_name} yet!"
+                    f"{extra_text}icons yet!"
                 )
                 return
 
@@ -271,7 +272,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
             }
         if not bot_countryballs:
             await interaction.followup.send(
-                f"There are no {extra_text}{settings.plural_collectible_name}"
+                f"There are no {extra_text}icons"
                 " registered on this bot yet!",
                 ephemeral=True,
             )
@@ -316,18 +317,18 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
         if owned_countryballs:
             # Getting the list of emoji IDs from the IDs of the owned countryballs
             fill_fields(
-                f"Owned {settings.plural_collectible_name}",
+                f"Owned icons",
                 set(bot_countryballs[x] for x in owned_countryballs),
             )
         else:
-            entries.append((f"__**Owned {settings.plural_collectible_name}**__", "Nothing... yet!"))
+            entries.append((f"__**Owned icons**__", "Nothing... yet!"))
 
         if missing := set(y for x, y in bot_countryballs.items() if x not in owned_countryballs):
-            fill_fields(f"Missing {settings.plural_collectible_name}", missing)
+            fill_fields(f"Missing icons", missing)
         else:
             entries.append(
                 (
-                    f"__**:tada: No missing {settings.plural_collectible_name}, "
+                    f"__**:tada: No missing icons, "
                     "congratulations! :tada:**__",
                     "\u200B",
                 )
@@ -388,7 +389,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
         except DoesNotExist:
             msg = f"{'You do' if user is None else f'{user_obj.display_name} does'}"
             await interaction.followup.send(
-                f"{msg} not have any {settings.plural_collectible_name} yet!",
+                f"{msg} not have any icons yet!",
                 ephemeral=True,
             )
             return
@@ -402,7 +403,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
         blocked = await player.is_blocked(interaction_player)
         if blocked and not is_staff(interaction):
             await interaction.followup.send(
-                f"You cannot view the last caught {settings.collectible_name} "
+                f"You cannot view the last caught icon "
                 "of a user that has blocked you!",
                 ephemeral=True,
             )
@@ -412,7 +413,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
         if not countryball:
             msg = f"{'You do' if user is None else f'{user_obj.display_name} does'}"
             await interaction.followup.send(
-                f"{msg} not have any {settings.plural_collectible_name} yet!",
+                f"{msg} not have any icons yet!",
                 ephemeral=True,
             )
             return
@@ -420,7 +421,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
         content, file = await countryball.prepare_for_message(interaction)
         if user is not None and user.id != interaction.user.id:
             content = (
-                f"You are viewing {user.display_name}'s last caught {settings.collectible_name}!\n"
+                f"You are viewing {user.display_name}'s last caught icon!\n"
                 + content
             )
         await interaction.followup.send(content=content, file=file)
@@ -448,7 +449,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
 
         if settings.max_favorites == 0:
             await interaction.response.send_message(
-                f"You cannot set favorite {settings.plural_collectible_name} in this bot!"
+                f"You cannot set favorite icons in this bot!"
             )
             return
 
@@ -457,14 +458,14 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
                 player = await Player.get(discord_id=interaction.user.id).prefetch_related("balls")
             except DoesNotExist:
                 await interaction.response.send_message(
-                    f"You don't have any {settings.plural_collectible_name} yet!", ephemeral=True
+                    f"You don't have any icons yet!", ephemeral=True
                 )
                 return
 
             grammar = (
-                f"{settings.collectible_name}"
+                f"icon"
                 if settings.max_favorites == 1
-                else f"{settings.plural_collectible_name}"
+                else f"icons"
             )
             if await player.balls.filter(favorite=True).count() >= settings.max_favorites:
                 await interaction.response.send_message(
@@ -478,7 +479,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
             emoji = self.bot.get_emoji(countryball.countryball.emoji_id) or ""
             await interaction.response.send_message(
                 f"{emoji} `#{countryball.pk:0X}` {countryball.countryball.country} "
-                f"is now a favorite {settings.collectible_name}!",
+                f"is now a favorite icon!",
                 ephemeral=True,
             )
 
@@ -488,7 +489,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
             emoji = self.bot.get_emoji(countryball.countryball.emoji_id) or ""
             await interaction.response.send_message(
                 f"{emoji} `#{countryball.pk:0X}` {countryball.countryball.country} "
-                f"isn't a favorite {settings.collectible_name} anymore!",
+                f"isn't a favorite icon anymore!",
                 ephemeral=True,
             )
 
@@ -516,7 +517,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
             return
         if not countryball.is_tradeable:
             await interaction.response.send_message(
-                f"You cannot donate this {settings.collectible_name}!", ephemeral=True
+                f"You cannot donate this icon!", ephemeral=True
             )
             return
         if user.bot:
@@ -524,7 +525,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
             return
         if await countryball.is_locked():
             await interaction.response.send_message(
-                f"This {settings.collectible_name} is currently locked for a trade. "
+                f"This icon is currently locked for a trade. "
                 "Please try again later!",
                 ephemeral=True,
             )
@@ -537,7 +538,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
                 cancel_message="This request has been cancelled!",
             )
             await interaction.response.send_message(
-                f"This {settings.collectible_name} is a favorite, "
+                f"This icon is a favorite, "
                 "are you sure you want to donate it?",
                 view=view,
                 ephemeral=True,
@@ -554,7 +555,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
 
         if new_player == old_player:
             await interaction.followup.send(
-                f"You cannot give a {settings.collectible_name} to yourself!", ephemeral=True
+                f"You cannot give an icon to yourself!", ephemeral=True
             )
             await countryball.unlock()
             return
@@ -613,12 +614,12 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
         if favorite:
             await interaction.followup.send(
                 f"{interaction.user.mention}, you just gave the "
-                f"{settings.collectible_name} {cb_txt} to {user.mention}!",
+                f"icon {cb_txt} to {user.mention}!",
                 allowed_mentions=discord.AllowedMentions(users=new_player.can_be_mentioned),
             )
         else:
             await interaction.followup.send(
-                f"You just gave the {settings.collectible_name} {cb_txt} to {user.mention}!",
+                f"You just gave the icon {cb_txt} to {user.mention}!",
                 allowed_mentions=discord.AllowedMentions(users=new_player.can_be_mentioned),
             )
         await countryball.unlock()
@@ -666,7 +667,7 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
 
         await interaction.followup.send(
             f"You have {balls} {special_str}"
-            f"{country}{settings.collectible_name}{plural}{guild}!"
+            f"{country}icon{plural}{guild}!"
         )
 
     @app_commands.command()
@@ -736,3 +737,125 @@ class Balls(commands.GroupCog, group_name=settings.players_group_cog_name):
 
         paginator = Pages(source, interaction=interaction)
         await paginator.start(ephemeral=True)
+        
+    @app_commands.command()
+    async def calculate(
+        self,
+        interaction: discord.Interaction["BallsDexBot"],
+        special: SpecialEnabledTransform,
+        icon: BallEnabledTransform,
+        boosted: bool
+    ):
+        """
+        Calculate an icon and special together in a way that is appropriate for the RKI.
+    
+        Parameters
+        ----------
+        special: Special
+            The special event to calculate for RKI
+        icon: Ball
+            The specific icon to calculate for RKI
+        boosted: bool
+            If the icon has boosted stats (between +31 and +100)
+        """
+        await interaction.response.defer(thinking=True, ephemeral=True)
+    
+        # Get all currently spawnable specials (within their date range)
+        from datetime import datetime
+        from tortoise.timezone import now as datetime_now
+    
+        spawnable_specials = {
+            x: y for x, y in specials.items() 
+            if (y.start_date is None or y.start_date <= datetime_now()) 
+            and (y.end_date is None or y.end_date >= datetime_now())
+        }
+        total_specials = len(spawnable_specials)
+    
+        # Get all enabled balls
+        enabled_balls = {x: y for x, y in balls.items() if y.enabled}
+    
+        # Calculate total icon database value (sum of all enabled icons' tier/rarity values)
+        total_icon_db_value = sum(ball.rarity for ball in enabled_balls.values())
+    
+        # Calculate tier groups more precisely
+        tier_groups = {}
+        for ball in enabled_balls.values():
+                # Use a precise string representation of the rarity to distinguish between different values
+            rarity_key = f"{ball.rarity:.4f}"
+            if rarity_key not in tier_groups:
+                tier_groups[rarity_key] = 0
+            tier_groups[rarity_key] += 1
+
+        # Calculate Z (value of the special)
+        Z = special.rarity if special else 0
+    
+        # Calculate X (amount of spawnable specials)
+        X = total_specials
+        
+        # Calculate N (Tier % of the icon)
+        icon_tier_value = f"{icon.rarity:.4f}"
+        icon_tier_group_count = tier_groups.get(icon_tier_value, 0)
+        
+        # Multiply tier count by the icon's rarity
+        weighted_tier_count = icon_tier_group_count * icon.rarity
+        icon_tier_percentage = (weighted_tier_count / total_icon_db_value) * 100
+    
+        # Calculate final RKI
+        try:
+            rki_value = (((Z / X) * icon_tier_percentage) / 100) * 100
+        except ZeroDivisionError:
+            rki_value = 0
+        if boosted == True:
+            rki_value = (rki_value/2000)
+    
+        # Create an embed to display the results
+        embed = discord.Embed(
+            title="Calculator",
+            color=discord.Color.magenta()
+        )
+        embed.add_field(name="Special", value=special.name, inline=False)
+        embed.add_field(name="Icon", value=icon.country, inline=False)
+        embed.add_field(name="Boosted", value=boosted, inline=False)
+        embed.add_field(name="Final Percent", value=f"{rki_value:.15f}%", inline=False)
+
+        await interaction.followup.send(embed=embed, ephemeral=True)
+    @app_commands.command()
+    async def rki(
+        self,
+        interaction: discord.Interaction["BallsDexBot"],
+    ):
+        """
+        Displays the RKI.
+        """
+        await interaction.response.defer(thinking=True, ephemeral=True)
+    
+        try:
+            channel = interaction.client.get_channel(1357965526999236708)
+            if not channel:
+                channel = await interaction.client.fetch_channel(1357965526999236708)
+            
+            if not channel:
+                await interaction.followup.send("Could not find the specified channel.", ephemeral=True)
+                return
+            
+            try:
+                # Use async iteration instead of .flatten()
+                async for message in channel.history(limit=1):
+                    recent_message = message
+                    break
+                else:
+                    await interaction.followup.send("No recent messages found in the channel.", ephemeral=True)
+                    return
+                
+                await interaction.followup.send(
+                    f"\n{recent_message.content}", 
+                    ephemeral=True
+                )
+            
+            except discord.Forbidden:
+                await interaction.followup.send("I do not have permission to read message history in this channel.", ephemeral=True)
+        
+        except discord.NotFound:
+            await interaction.followup.send("The specified channel could not be found.", ephemeral=True)
+        except Exception as e:
+            await interaction.followup.send(f"An error occurred: {str(e)}", ephemeral=True)
