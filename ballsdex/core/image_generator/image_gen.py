@@ -1,7 +1,7 @@
 import os
 import textwrap
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
@@ -19,10 +19,22 @@ RECTANGLE_HEIGHT = (HEIGHT // 5) * 2
 CORNERS = ((34, 261), (1393, 992))
 artwork_size = [b - a for a, b in zip(*CORNERS)]
 
-title_font = ImageFont.truetype(str(SOURCES_PATH / "ArsenicaTrial-Extrabold.ttf"), 165)
-capacity_name_font = ImageFont.truetype(str(SOURCES_PATH / "Bobby Jones Soft.otf"), 90)
-capacity_description_font = ImageFont.truetype(str(SOURCES_PATH / "OpenSans-Semibold.ttf"), 55)
-stats_font = ImageFont.truetype(str(SOURCES_PATH / "Bobby Jones Soft.otf"), 90)
+# ===== TIP =====
+#
+# If you want to quickly test the image generation, there is a CLI tool to quickly generate
+# test images locally, without the bot or the admin panel running:
+#
+# With Docker: "docker compose run admin-panel python3 manage.py preview > image.png"
+# Without: "cd admin_panel && poetry run python3 manage.py preview"
+#
+# This will either create a file named "image.png" or directly display it using your system's
+# image viewer. There are options available to specify the ball or the special background,
+# use the "--help" flag to view all options.
+
+title_font = ImageFont.truetype(str(SOURCES_PATH / "ArsenicaTrial-Extrabold.ttf"), 170)
+capacity_name_font = ImageFont.truetype(str(SOURCES_PATH / "Bobby Jones Soft.otf"), 110)
+capacity_description_font = ImageFont.truetype(str(SOURCES_PATH / "OpenSans-Semibold.ttf"), 75)
+stats_font = ImageFont.truetype(str(SOURCES_PATH / "Bobby Jones Soft.otf"), 130)
 stats_percent = ImageFont.truetype(str(SOURCES_PATH / "Pusab.ttf"), 50)
 credits_font = ImageFont.truetype(str(SOURCES_PATH / "arial.ttf"), 40)
 
@@ -31,11 +43,14 @@ credits_color_cache = {}
 
 def get_credit_color(image: Image.Image, region: tuple) -> tuple:
     image = image.crop(region)
-    brightness = sum(image.convert("L").getdata()) / image.width / image.height
+    brightness = sum(image.convert("L").getdata()) / image.width / image.height  # type: ignore
     return (0, 0, 0, 255) if brightness > 100 else (255, 255, 255, 255)
 
 
-def draw_card(ball_instance: "BallInstance", media_path: str = "./admin_panel/media/"):
+def draw_card(
+    ball_instance: "BallInstance",
+    media_path: str = "./admin_panel/media/",
+) -> tuple[Image.Image, dict[str, Any]]:
     ball = ball_instance.countryball
     ball_health = (255, 255, 255, 255)
     ball_credits = ball.credits
@@ -62,7 +77,10 @@ def draw_card(ball_instance: "BallInstance", media_path: str = "./admin_panel/me
         stroke_width=5,
         stroke_fill=(0, 0, 0, 255),
     )
-    for i, line in enumerate(textwrap.wrap(f"Ability: {ball.capacity_name}", width=26)):
+
+    cap_name = textwrap.wrap(f"Ability: {ball.capacity_name}", width=26)
+
+    for i, line in enumerate(cap_name):
         draw.text(
             (70, 1070 + 75 * i),
             line,
@@ -73,12 +91,13 @@ def draw_card(ball_instance: "BallInstance", media_path: str = "./admin_panel/me
         )
     for i, line in enumerate(textwrap.wrap(ball.capacity_description, width=42)):
         draw.text(
-            (60, 1370 + 50 * i),
+            (60, 1370 + 100 * len(cap_name) + 50 * i),
             line,
             font=capacity_description_font,
             stroke_width=3,
             stroke_fill=(0, 0, 0, 255),
         )
+
     draw.text(
         (320, 1725),
         str(ball_instance.health),
@@ -277,4 +296,4 @@ def draw_card(ball_instance: "BallInstance", media_path: str = "./admin_panel/me
         icon.close()
     artwork.close()
 
-    return image
+    return image, {"format": "WEBP"}

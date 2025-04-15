@@ -75,10 +75,10 @@ class Settings:
     shard_count: int | None = None
     prefix: str = "b."
 
-    collectible_name: str = "icon"
-    plural_collectible_name: str = "icons"
-    bot_name: str = "IconDex"
-    players_group_cog_name: str = "icons"
+    collectible_name: str = "countryball"
+    plural_collectible_name: str = "countryballs"
+    bot_name: str = "BallsDex"
+    players_group_cog_name: str = "balls"
     favorited_collectible_emoji: str = "❤️"
 
     max_favorites: int = 50
@@ -156,8 +156,8 @@ def read_settings(path: "Path"):
     settings.prometheus_port = content["prometheus"]["port"]
 
     settings.max_favorites = content.get("max-favorites", 50)
-    settings.max_attack_bonus = content.get("max-attack-bonus", 30)
-    settings.max_health_bonus = content.get("max-health-bonus", 30)
+    settings.max_attack_bonus = content.get("max-attack-bonus", 20)
+    settings.max_health_bonus = content.get("max-health-bonus", 20)
 
     settings.packages = content.get("packages") or [
         "ballsdex.packages.admin",
@@ -204,10 +204,10 @@ about:
   github-link: https://github.com/laggron42/BallsDex-DiscordBot
 
   # valid invite for a Discord server
-  discord-invite: https://discord.gg/ballsdex  # BallsDex official server
+  discord-invite: https://discord.gg/INVITE_CODE
 
-  terms-of-service: https://gist.github.com/laggron42/52ae099c55c6ee1320a260b0a3ecac4e
-  privacy-policy: https://gist.github.com/laggron42/1eaa122013120cdfcc6d27f9485fe0bf
+  terms-of-service: https://gist.github.com/ # replace with your own link
+  privacy-policy: https://gist.github.com/ # replace with your own link
 
 # WORK IN PROGRESS, DOES NOT FULLY WORK
 # override the name "countryball" in the bot
