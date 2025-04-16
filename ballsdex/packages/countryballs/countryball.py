@@ -61,8 +61,8 @@ class CountryballNamePrompt(Modal, title=f"Catch this {settings.collectible_name
 
         player, _ = await Player.get_or_create(discord_id=interaction.user.id)
         if self.view.caught:
-            await interaction.followup.send(
-                f"{interaction.user.mention} I was caught already!",
+            slowlist = [f"{interaction.user.mention}, you were too silly and slow!", f"{interaction.user.mention}, did you REALLY think you could catch that?", f"{interaction.user.mention}, I admire your confidence for trying.", f"Come on, {interaction.user.mention}! Keep trying! Maybe you'll outspeed Lamia one day.", f"{interaction.user.mention}, please try a little bit harder next time.", f"Hey {interaction.user.mention}, you gotta work on your typing speed.", f"{interaction.user.mention}, remember... THEORETICALLY, you could outspeed anyone... just not today.", f"{interaction.user.mention}, did you really try to get that one? It feels like you're antagonizing me.", f"{interaction.user.mention}, are you slow on purpose?", f"{interaction.user.mention}, I'm not meaning to put you in a bad mood. It's not my fault that you're a slow typer.", f"{interaction.user.mention}, you have no idea how much your slowness hurts me.", f"{interaction.user.mention}, your completion will be looking dry if you keep making attempts like that.", f"{interaction.user.mention} should stick to grinding completion instead of going for rares.", f"Sometimes I think you're not built for competitive play. Maybe you should stick to farming, {interaction.user.mention}."]
+            await interaction.followup.send(random.choice(slowlist),
                 ephemeral=True,
                 allowed_mentions=discord.AllowedMentions(users=player.can_be_mentioned),
             )
@@ -79,11 +79,28 @@ class CountryballNamePrompt(Modal, title=f"Catch this {settings.collectible_name
             )
             await interaction.followup.edit_message(self.view.message.id, view=self.view)
         else:
-            await interaction.followup.send(
-                f"{interaction.user.mention} Wrong name!",
-                allowed_mentions=discord.AllowedMentions(users=player.can_be_mentioned),
-                ephemeral=False,
-            )
+            wrongmsglist = [f"{interaction.user.mention} just said “{self.name}.” Point and laugh.", f"{interaction.user.mention}, that's not how you spell **{self.view.model.country}.**", f"I pray that {interaction.user.mention} doesn't have any hopes of becoming a stenographer...", f"{interaction.user.mention}, slamming your keyboard won't help.", f"What's wrong, {interaction.user.mention}? Don't know this one?", f"{interaction.user.mention}, I can't tell if you need to use comp or you're just REALLY bad at typing.", f"Was that a typo, {interaction.user.mention}?", f"{interaction.user.mention}, how do you NOT know what this icon's name is?", f"Fine, {interaction.user.mention}, it's **{self.view.model.country}.** Please stop wasting my time.", f"{interaction.user.mention}... how did you manage to type THAT poorly?", f"{interaction.user.mention}. Please. Type properly. For the love of god.", f"{interaction.user.mention}, I request of you to write this icon's name correctly next time. Don't disappoint me.", "I'm gonna save whoever just said that the embarrassment of being associated with that guess. You're welcome.", f"The genius known as {interaction.user.mention} thought it was someone DIFFERENT than **{self.view.model.country}.**", f"{interaction.user.mention} ligma ball"]
+            # sorry bro
+            sadnesslist = ["robtop", "anaban", "michigun", "riot", "pasiblitz", "sandstorm", "nswish", "lunarsimg", "brandonlarkin", "zobros", "krmal", "niezziq", "souls", "hiroquet", "hilo"]
+            sadwrongmsglist = [f"{interaction.user.mention}, I wish it was them too, dude.", f"{interaction.user.mention}, sorry to break the news to you. You aren't getting that rich today."]
+            # poop humor
+            pooplist = ["poop", "shit", "fart", "scat", "feces", "fecal", "dung"]
+            poopwrongmsglist = ["farty poop fart poopie farty", "HAHAHAHA POOP", "benektelse has irritable bowel syndrome", "POOPIGN!!!"]
+            if f"{self.name}".lower() in sadnesslist:
+                await interaction.followup.send(random.choice(sadwrongmsglist),
+                    allowed_mentions=discord.AllowedMentions(users=player.can_be_mentioned),
+                    ephemeral=False,
+                )
+            elif f"{self.name}".lower() in pooplist:
+                await interaction.followup.send(random.choice(poopwrongmsglist),
+                    allowed_mentions=discord.AllowedMentions(users=player.can_be_mentioned),
+                    ephemeral=False,
+                )
+            else:
+                await interaction.followup.send(random.choice(wrongmsglist),
+                    allowed_mentions=discord.AllowedMentions(users=player.can_be_mentioned),
+                    ephemeral=False,
+                )
 
 
 class BallSpawnView(View):
@@ -210,8 +227,7 @@ class BallSpawnView(View):
         try:
             permissions = channel.permissions_for(channel.guild.me)
             if permissions.attach_files and permissions.send_messages:
-                self.message = await channel.send(
-                    f"A wild {settings.collectible_name} appeared!",
+                self.message = await channel.send(random.choice(spwnmsglist),
                     view=self,
                     file=discord.File(file_location, filename=file_name),
                 )
@@ -380,15 +396,15 @@ class BallSpawnView(View):
             Boolean indicating if this is a new countryball in completion
             (as returned by `catch_ball`)
         """
+        fakeoutlist = ["Henral", "Hotball1", "Trick", "Biprex", "KPGDylan", "Seels", "adafcaefc", "Zylenox", "Zoink", "Doggie", "heda", "Paqoe", "zNymo98", "SerVax", "Thycket", "Slithium", "Nocturina", "Wolvez", "Benektelse", "Zeroxy", "rWooshi", "StormBlazer", "nsla", "MrSpaghetti", "Thnnder", "Tigger4046", "BigMukMuk", "Swiborg", "SpaceUK", "saRy", "Hyperbola", "SpirteX", "WarGack", "sinc0s", "Phynn24", "mosk14142", "iIiViRuZiIi", "AleXPain24", "Qwer", "Absolute", "bop", "Vertic", "Quasar", "Cvolton", "3xotic", "Surv", "hmann", "DarkX", "KrmaL", "LunarSIMG", "BrandonLarkin", "Zobros", "nSwish", "Sandstorm", "Riot", "Pasiblitz", "Michigun", "Robtop", "Anaban",  "NiezziQ", "Hilo", "Souls", "DiscJoker", "Pacosky18", "llqne"]
+        actionlist = ["spying on " f"**{random.choice(fakeoutlist)}**", "cooking dinner", "working out", "doing yoga", "working overtime", "playing IconDex", "sleeping", "in class", "making a video", "jumping over spikes", "playing a level", "arguing with " f"**{random.choice(fakeoutlist)}**", "having a pillow fight with " f"**{random.choice(fakeoutlist)}**", "running errands with " f"**{random.choice(fakeoutlist)}**", "hanging out with " f"**{random.choice(fakeoutlist)}**", "making a level", "grinding stars", "grinding moons", "grinding demons", "being tutored by " f"**{random.choice(fakeoutlist)}**", "partying with " f"**{random.choice(fakeoutlist)}**", "listening to music", "relaxing", "competing against " f"**{random.choice(fakeoutlist)}**", "on a picnic with " f"**{random.choice(fakeoutlist)}**", "on the beach with " f"**{random.choice(fakeoutlist)}**"]
+        catchmsglist = ["just caught **{icon}** off guard while they were {iconaction}." f"\n`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "just caught **{icon}** off guard while they were {iconaction}." f"\n`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "just caught **{icon}** off guard while they were {iconaction}." f"\n`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "just caught **{icon}** off guard while they were {iconaction}." f"\n`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "just caught **{icon}** off guard while they were {iconaction}." f"\n`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "received **{icon}** " f"`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)` " "as a reward for winning a competition against " f"**{random.choice(fakeoutlist)}**!" "\n\n {icondexspecial}", "started a cult revolving around **{icon}...** " f"\n`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "Now in your posession... with an attack multiplier of " f"`{ball.attack_bonus:+}%` " "and a health multiplier of " f"`{ball.health_bonus:+}%`, " "everyone please welcome the great **{icon}** to their collection!!!" f"\n`(#{ball.pk:0X})`" "\n\n {icondexspecial}", "Have you considered that this **{icon}** you just caught might be silly? " f"\n`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "didn't ACTUALLY catch **{icon}.** I'm only sending this so that they don't feel bad. \n" f"`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "Nice work! You just caught **{icon}!** \n" f"`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "hey dude look you LITERALLY just got **{icon}!!!**" f"\n`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "Make sure to hide your **{icon}** before JuMa can steal it!" f"\n`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "Nice work! You just caught " f"**{random.choice(fakeoutlist)}!** " "\n ...just kidding, you actually caught **{icon}.**" f"\n`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", " has successfully caught **{icon}**!!" f"\n`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "This **{icon}** is pretty awesome. " f"\n`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "That **{icon}** looks really good in your collection! You should start collecting them!" f"\n`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "That **{icon}** doesn't have a permit to be silly, just so you know." f"\n`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}", "You should give me that **{icon}.** I need it more than you do." f"\n`(#{ball.pk:0X}, " f"{ball.attack_bonus:+}%/" f"{ball.health_bonus:+}%)`" "\n\n {icondexspecial}"]
         text = ""
         if ball.specialcard and ball.specialcard.catch_phrase:
             text += f"*{ball.specialcard.catch_phrase}*\n"
         if new_ball:
             text += (
-                f"This is a **new {settings.collectible_name}** "
-                "that has been added to your completion!"
+                f"Woah... is that a **new {settings.collectible_name}** "
+                "you've just caught?!"
             )
-        return (
-            f"You caught **{self.name}!** "
-            f"`(#{ball.pk:0X}, {ball.attack_bonus:+}%/{ball.health_bonus:+}%)`\n\n{text}"
-        )
+        return (random.choice(catchmsglist).format(icon = self.name, icondexspecial = text, iconaction = random.choice(actionlist)))

@@ -31,10 +31,10 @@ artwork_size = [b - a for a, b in zip(*CORNERS)]
 # image viewer. There are options available to specify the ball or the special background,
 # use the "--help" flag to view all options.
 
-title_font = ImageFont.truetype(str(SOURCES_PATH / "ArsenicaTrial-Extrabold.ttf"), 170)
-capacity_name_font = ImageFont.truetype(str(SOURCES_PATH / "Bobby Jones Soft.otf"), 110)
-capacity_description_font = ImageFont.truetype(str(SOURCES_PATH / "OpenSans-Semibold.ttf"), 75)
-stats_font = ImageFont.truetype(str(SOURCES_PATH / "Bobby Jones Soft.otf"), 130)
+title_font = ImageFont.truetype(str(SOURCES_PATH / "ArsenicaTrial-Extrabold.ttf"), 165)
+capacity_name_font = ImageFont.truetype(str(SOURCES_PATH / "Bobby Jones Soft.otf"), 90)
+capacity_description_font = ImageFont.truetype(str(SOURCES_PATH / "OpenSans-Semibold.ttf"), 55)
+stats_font = ImageFont.truetype(str(SOURCES_PATH / "Bobby Jones Soft.otf"), 90)
 stats_percent = ImageFont.truetype(str(SOURCES_PATH / "Pusab.ttf"), 50)
 credits_font = ImageFont.truetype(str(SOURCES_PATH / "arial.ttf"), 40)
 
@@ -91,7 +91,7 @@ def draw_card(
         )
     for i, line in enumerate(textwrap.wrap(ball.capacity_description, width=42)):
         draw.text(
-            (60, 1370 + 100 * len(cap_name) + 50 * i),
+            (60, 1290 + 80 * len(cap_name) + 50 * i),
             line,
             font=capacity_description_font,
             stroke_width=3,
